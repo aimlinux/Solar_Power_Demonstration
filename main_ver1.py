@@ -221,6 +221,7 @@ def end():
     sys.exit()
     
     
+    
 #チェックボックスの作成
 bln = tk.BooleanVar()
 bln.set(True)
