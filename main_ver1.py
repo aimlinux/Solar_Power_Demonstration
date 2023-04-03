@@ -30,7 +30,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(direction, GPIO.OUT)
 GPIO.setup(step, GPIO.OUT)#highとlowを入れるとこ
-GPIO.output(direction, 0)#回転の向き
+#GPIO.output(direction, 0)#回転の向き
 
 bus = smbus.SMBus(1)
 address_adt7420 = 0x48
@@ -120,7 +120,7 @@ def start():
             csv_value.append(Amp)
             csv_value.append(Watt)
             csv_value.append(temp.get())
-
+            
             writer.writerow(csv_value)#csv_valueの中身を入力
 
             sleep(1)
@@ -207,49 +207,6 @@ box_turn.grid(row=4,column=3)
 #スタートボタンの作成
 button=tk.Button(frame,text="スタート",command=dual_thread)#スタートボタンの配置、押したらdef start()が動く
 button.grid(row=6,column=1)
-
-
-
-
-#--------追加--------
-# プログラムを終了させるボタンを作る。
-# その際、チェックボックス（終了した時初期位置に戻る）が押されていたとき、
-# 初期位置に戻って終了する。
-
-
-def end():
-    sys.exit()
-    
-    
-    
-#チェックボックスの作成
-bln = tk.BooleanVar()
-bln.set(True)
-
-chk = tk.Checkbutton(
-    main_window,
-    variable=bln,
-    onvalue=True,
-    offvalue=False,
-    text="終了したとき初期位置に戻る")
-
-chk.place(x=100, y=180)
-
-
-    
-
-
-'''
-if bln.get():
-    print("成功")
-else:
-    print("失敗")
-'''
-
-
-#終了するボタンの作成
-button = tk.Button(main_window, text="終了する", command="")
-
 
 
 main_window.mainloop()
