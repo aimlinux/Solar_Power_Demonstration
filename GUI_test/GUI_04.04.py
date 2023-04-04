@@ -58,7 +58,7 @@ class Application(tk.Frame):
         label_space = tk.Label(fm_main, text="", bg="#ffffff", height=1, width=10)
         label_space.grid(row=0, column=0, padx=40, pady=10)
         
-        label_head = tk.Label(fm_main, text="   ~~計測された各値~~", bg="#ffffff", font=("Arial", 15, "bold"), height=2)
+        label_head = tk.Label(fm_main, text="   ~~計測された各値~~", bg="#ffffff", font=("Arial", 15), height=2)
         label_head.grid(row=1, column=0, columnspan=3)
         
         label_head = tk.Label(fm_main, text=" ~~詳細設定~~", bg="#ffffff", font=("Arial", 15), height=2)
