@@ -128,7 +128,7 @@ def start():
         f.close()#csvファイルを閉じる(入力終了)
 
 
-def dual_thread():#
+def dual_thread():#スレッドによる並列処理を実行
     thread = threading.Thread(target=start)
     thread.start()        
 
@@ -221,6 +221,16 @@ button.grid(row=6,column=1)
 def end():
     sys.exit()
     
+def dual_thread_stop():
+    thread = threading.Thread(target=start)
+    thread.join()
+    
+    
+#終了するボタンの作成
+button = tk.Button(frame, text="終了する", command=dual_thread_stop)
+button.grid(row=6,column=1)
+    
+    
     
     
 #チェックボックスの作成
@@ -237,9 +247,6 @@ chk = tk.Checkbutton(
 chk.place(x=100, y=180)
 
 
-    
-
-
 '''
 if bln.get():
     print("成功")
@@ -248,8 +255,6 @@ else:
 '''
 
 
-#終了するボタンの作成
-button = tk.Button(main_window, text="終了する", command="")
 
 
 
