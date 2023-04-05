@@ -42,12 +42,12 @@ class Application(tk.Frame):
         value = tk.StringVar()
         
         #ペインウィンドウ
-        pw_main = tk.PanedWindow(self.master, bg="cyan", orient='vertical')
+        pw_main = tk.PanedWindow(self.master, bg="#e6e6e6", orient='vertical')
         pw_main.pack(expand=True, fill = tk.BOTH, side="left")
         
         
-        #左フレーム作成
-        fm_main = tk.Frame(pw_main, bd=10, bg="#ffffff", relief="ridge")
+        #メインフレーム作成
+        fm_main = tk.Frame(pw_main, bd=10, bg="#e6e6e6", relief="ridge")
         pw_main.add(fm_main)
         
         
@@ -55,56 +55,56 @@ class Application(tk.Frame):
         #各ラベル作成
         # padx, pady ：外側の横、縦の隙間
         # row, column : 行、列
-        label_space = tk.Label(fm_main, text="", bg="#ffffff", height=1, width=10)
+        label_space = tk.Label(fm_main, text="", bg="#e6e6e6", height=1, width=10)
         label_space.grid(row=0, column=0, padx=40, pady=10)
         
-        label_head = tk.Label(fm_main, text="   ~~計測された各値~~", bg="#ffffff", font=("Arial", 15), height=2)
+        label_head = tk.Label(fm_main, text="   ~~計測された各値~~", bg="#e6e6e6", font=("Arial", 15), height=2)
         label_head.grid(row=1, column=0, columnspan=3)
         
-        label_head = tk.Label(fm_main, text=" ~~詳細設定~~", bg="#ffffff", font=("Arial", 15), height=2)
+        label_head = tk.Label(fm_main, text=" ~~詳細設定~~", bg="#e6e6e6", font=("Arial", 15), height=2)
         label_head.grid(row=1, column=4, columnspan=3, sticky=tk.W)
         
-        label_head = tk.Label(fm_main, text=" ~~実行・停止~~", bg="#ffffff", font=("Arial", 15), height=2)
+        label_head = tk.Label(fm_main, text=" ~~実行・停止~~", bg="#e6e6e6", font=("Arial", 15), height=2)
         label_head.grid(row=6, column=4, columnspan=3, sticky=tk.SW)
         
         
         
-        label_volt = tk.Label(fm_main, text="〇電圧値(V)", bg="#ffffff", font=("Arial", 10), height=2, width=10)
+        label_volt = tk.Label(fm_main, text="〇電圧値(V)", bg="#e6e6e6", font=("Arial", 10), height=2, width=10)
         label_volt.grid(row=2, column=0, padx=40, pady=10)
-        label_V = tk.Label(fm_main, text="V", bg="#ffffff", font=("Arial", 10))
+        label_V = tk.Label(fm_main, text="V", bg="#e6e6e6", font=("Arial", 10))
         label_V.grid(row=2, column=2, padx=10, pady=10)
-        label_amp = tk.Label(fm_main, text="〇電流値(mA)", bg="#ffffff", font=("Arial", 10), height=2, width=10)
+        label_amp = tk.Label(fm_main, text="〇電流値(mA)", bg="#e6e6e6", font=("Arial", 10), height=2, width=10)
         label_amp.grid(row=3, column=0, padx=40, pady=10)
-        label_A = tk.Label(fm_main, text="mA", bg="#ffffff", font=("Arial", 10))
+        label_A = tk.Label(fm_main, text="mA", bg="#e6e6e6", font=("Arial", 10))
         label_A.grid(row=3, column=2, padx=10, pady=10)
-        label_watt = tk.Label(fm_main, text="〇電力(mW)", bg="#ffffff", font=("Arial", 10), height=2, width=10)
+        label_watt = tk.Label(fm_main, text="〇電力(mW)", bg="#e6e6e6", font=("Arial", 10), height=2, width=10)
         label_watt.grid(row=4, column=0, padx=40, pady=10)
-        label_W = tk.Label(fm_main, text="mW", bg="#ffffff", font=("Arial", 10))
+        label_W = tk.Label(fm_main, text="mW", bg="#e6e6e6", font=("Arial", 10))
         label_W.grid(row=4, column=2, padx=10, pady=10)
-        label_temp = tk.Label(fm_main, text="〇温度(℃)", bg="#ffffff", font=("Arial", 10), height=2, width=10)
+        label_temp = tk.Label(fm_main, text="〇温度(℃)", bg="#e6e6e6", font=("Arial", 10), height=2, width=10)
         label_temp.grid(row=5, column=0, padx=40, pady=10)
-        label_T = tk.Label(fm_main, text="℃", bg="#ffffff", font=("Arial", 10))
+        label_T = tk.Label(fm_main, text="℃", bg="#e6e6e6", font=("Arial", 10))
         label_T.grid(row=5, column=2, padx=10, pady=10)
-        label_count = tk.Label(fm_main, text="〇カウント", bg="#ffffff", font=("Arial", 10), height=2, width=10)
+        label_count = tk.Label(fm_main, text="〇カウント", bg="#e6e6e6", font=("Arial", 10), height=2, width=10)
         label_count.grid(row=6, column=0, padx=10, pady=10)
 
         #各値の出力用
-        box_volt = tk.Label(fm_main, font=("Arial", 10), height=2, width=3, textvariable=volt)
+        box_volt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=volt)
         box_volt.grid(row=2, column=1)
-        box_amp = tk.Label(fm_main, font=("Arial", 10), height=2, width=3, textvariable=amp)
+        box_amp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=amp)
         box_amp.grid(row=3, column=1)
-        box_watt = tk.Label(fm_main, font=("Arial", 10), height=2, width=3, textvariable=watt)
+        box_watt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=watt)
         box_watt.grid(row=4, column=1)
-        box_temp = tk.Label(fm_main, font=("Arial", 10), height=2, width=3, textvariable=temp)
+        box_temp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=temp)
         box_temp.grid(row=5, column=1)
-        box_count = tk.Label(fm_main, font=("Arial", 10), height=2, width=3, textvariable=count)
+        box_count = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=count)
         box_count.grid(row=6, column=1)
 
-        label_space = tk.Label(fm_main, text="", bg="#ffffff", height=2, width=15)
+        label_space = tk.Label(fm_main, text="", bg="#e6e6e6", height=2, width=15)
         label_space.grid(row=2, column=3, padx=10, pady=10)
         
         #ファイルの名前入力用
-        label_filename=tk.Label(fm_main, text="ファイル名 ：", bg="#ffffff", font=("Arial", 10), height=2)
+        label_filename=tk.Label(fm_main, text="ファイル名 ：", bg="#e6e6e6", font=("Arial", 10), height=2)
         label_filename.grid(row=2, column=4, padx=10, pady=10, sticky=tk.W)
         box_filename=tk.Entry(fm_main, bg="#e0ffff", font=("Arial", 13), width=13)#csvのファイル名を入力するところ
         box_filename.grid(row=2, column=5, padx=10, pady=10)#何も入力していないとエラーになる
@@ -114,17 +114,17 @@ class Application(tk.Frame):
         var.set(0)
         LRturn = tk.IntVar()
         LRturn.set(1)
-        button_turn = tk.Radiobutton(fm_main, text="回転させる", variable=var, value=1)
+        button_turn = tk.Radiobutton(fm_main, bg="#e6e6e6", text="回転させる", variable=var, value=1)
         button_turn.grid(row=3, column=4)
-        button_turn = tk.Radiobutton(fm_main, text="回転させない", variable=var, value=0)
+        button_turn = tk.Radiobutton(fm_main, bg="#e6e6e6", text="回転させない", variable=var, value=0)
         button_turn.grid(row=3, column=5, sticky=tk.W)
-        button_turn = tk.Radiobutton(fm_main, text="時計回り", variable=LRturn, value=1)
+        button_turn = tk.Radiobutton(fm_main, bg="#e6e6e6", text="時計回り", variable=LRturn, value=1)
         button_turn.grid(row=4, column=4)
-        button_turn = tk.Radiobutton(fm_main, text="反時計回り", variable=LRturn, value=0)
+        button_turn = tk.Radiobutton(fm_main, bg="#e6e6e6", text="反時計回り", variable=LRturn, value=0)
         button_turn.grid(row=4, column=5, sticky=tk.W)
         
         #回転させる回数の入力用
-        label_turn = tk.Label(fm_main, text="回転させる数 ：  ", bg="#ffffff", font=("Arial", 9), height=2)
+        label_turn = tk.Label(fm_main, text="回転させる数 ：  ", bg="#e6e6e6", font=("Arial", 9), height=2)
         label_turn.grid(row=5, column=4)
         box_turn = tk.Entry(fm_main, bg="#e0ffff", font=("Arial", 13), width=4)
         box_turn.grid(row=5, column=5, sticky=tk.W)
@@ -139,7 +139,7 @@ class Application(tk.Frame):
         
         bln = tk.BooleanVar()
         bln.set(True)
-        chk = tk.Checkbutton(fm_main, variable=bln, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 9))
+        chk = tk.Checkbutton(fm_main, bg="#e6e6e6", variable=bln, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 9))
         chk.grid(row=8, column=4, columnspan=2, padx=20, pady=10, sticky=tk.W)
         
         button_stop = tk.Button(fm_main, text="終了", bg="#dda0dd", font=("Arial", 12), width=10)
