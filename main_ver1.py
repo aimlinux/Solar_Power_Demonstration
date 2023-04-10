@@ -15,13 +15,13 @@ import sys
 from time import sleep
 import time
 import RPi.GPIO as GPIO #ラズパイのピン指定用(windowsじゃ動かない)
-import smbus
+import smbus #(windowsじゃ動かない)
 import threading
 
 #csvの保存先
 dir_op_path = '/home/pi/kakuda/csv'#''の中に保存先のディレクトリを指定
 
-#ピンのセットアップ
+#ピンのセットアップa
 direction = 20
 step = 21
 
