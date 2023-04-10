@@ -131,10 +131,10 @@ class Application(tk.Frame):
         
         
         #実行・停止
-        button_start = tk.Button(fm_main, text="スタート", fg="#ffffff", bg="#0b0b33", font=("Arial", 12), width=10)#スタートボタンの配置、押したらdef start()が動く
+        button_start = tk.Button(fm_main, text="スタート", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10)#スタートボタンの配置、押したらdef start()が動く
         button_start.grid(row=7, column=4, columnspan=2, padx=20, pady=10, sticky=tk.SW)
         
-        button_stop = tk.Button(fm_main, text="一時停止", fg="#ffffff", bg="#0b0b33", font=("Arial", 12), width=10)
+        button_stop = tk.Button(fm_main, text="一時停止", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10)
         button_stop.grid(row=7, column=5, columnspan=2, padx=40, pady=10, sticky=tk.SW)
         
         bln = tk.BooleanVar()
@@ -142,7 +142,7 @@ class Application(tk.Frame):
         chk = tk.Checkbutton(fm_main, bg="#add8e6", variable=bln, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 10))
         chk.grid(row=8, column=4, columnspan=2, padx=20, pady=10, sticky=tk.W)
         
-        button_stop = tk.Button(fm_main, text="終了", fg="#ffffff", bg="#0b0b33", font=("Arial", 12), width=10)
+        button_stop = tk.Button(fm_main, text="終了", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10)
         button_stop.grid(row=9, column=5, columnspan=2, padx=45, pady=10, sticky=tk.W)
         
         
