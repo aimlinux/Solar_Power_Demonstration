@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 from concurrent.futures import thread
 import tkinter as tk
-from tkinter import filedialog 
-from tkinter import messagebox 
+import tkinter.filedialog
 import re
 import numpy as np
 import datetime
@@ -20,6 +18,9 @@ import time
 #import smbus
 import threading
 
+
+
+dir_op_path = ''
 
 
 # アプリケーション（GUI）クラス
@@ -60,13 +61,13 @@ class Application(tk.Frame):
         label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=10)
         label_space.grid(row=0, column=0, padx=40, pady=10)
         
-        label_head = tk.Label(fm_main, text="   ~~計測された各値~~", bg="#add8e6", font=("Arial", 15), height=2)
+        label_head = tk.Label(fm_main, text="   ~~ 計測された各値 ~~", bg="#add8e6", font=("Arial", 15), height=2)
         label_head.grid(row=1, column=0, columnspan=3)
         
-        label_head = tk.Label(fm_main, text=" ~~詳細設定~~", bg="#add8e6", font=("Arial", 15), height=2)
+        label_head = tk.Label(fm_main, text=" ~~ 詳細設定 ~~", bg="#add8e6", font=("Arial", 15), height=2)
         label_head.grid(row=1, column=4, columnspan=3, sticky=tk.W)
         
-        label_head = tk.Label(fm_main, text=" ~~実行・停止~~", bg="#add8e6", font=("Arial", 15), height=2)
+        label_head = tk.Label(fm_main, text=" ~~ 実行・停止 ~~", bg="#add8e6", font=("Arial", 15), height=2)
         label_head.grid(row=6, column=4, columnspan=3, sticky=tk.SW)
         
         
@@ -106,16 +107,11 @@ class Application(tk.Frame):
         label_space.grid(row=2, column=3, padx=10, pady=10)
         
         #ファイルの名前入力用
-        label_filename=tk.Button(fm_main, text="ファイル名を選択", bg="#191970", fg="#fff0f5" font=("Arial", 10), height=2)
+        label_filename=tk.Label(fm_main, text="ファイル名 ：", bg="#add8e6", font=("Arial", 10), height=2)
         label_filename.grid(row=2, column=4, padx=10, pady=10, sticky=tk.W)
         box_filename=tk.Entry(fm_main, bg="#e0ffff", font=("Arial", 13), width=13)#csvのファイル名を入力するところ
         box_filename.grid(row=2, column=5, padx=10, pady=10)#何も入力していないとエラーになる
-
-        typ = [('テキストファイル', '*.txt')]
-        dir = 'C://pg'
-        file = filedialog.askdirectory()
         
-        print(file)
         
         var = tk.IntVar()
         var.set(0)
@@ -152,6 +148,7 @@ class Application(tk.Frame):
         button_stop = tk.Button(fm_main, text="終了", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10)
         button_stop.grid(row=9, column=5, columnspan=2, padx=45, pady=10, sticky=tk.W)
         
+        
                 
         print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
 
@@ -163,111 +160,3 @@ myapp.master.geometry("760x580") # ウィンドウの幅と高さピクセル単
 #myapp.master.geometry("720x480")
 
 myapp.mainloop()
-
-
-
-
-
-
-'''
-#メインウィンドウの作成
-main_window = tk.Tk()#メインウィンドウの作成
-main_window.title("太陽光発電システムを用いた金融教材")#メインウィンドウの名前
-main_window.geometry("800x500")#メインウィンドウのサイズ
-
-
-
-volt = tk.StringVar()
-amp = tk.StringVar()
-watt = tk.StringVar()
-watth = tk.StringVar()
-temp = tk.StringVar()
-ohm = tk.StringVar()
-count = tk.StringVar()
-value = tk.StringVar()
-
-
-#フレームの作成
-frame = tk.Frame(main_window, bd=5, relief="ridge")#メインウィンドウの中にフレームを作成
-
-frame.pack(padx=10,pady=10)#フレームの中にラベルなどを作っていく
-
-#ラベル作成
-label_volt=tk.Label(frame,text="電圧値(V)")
-label_volt.grid(row=0,column=0)
-label_V=tk.Label(frame,text="V")
-label_V.grid(row=0,column=2)
-label_amp=tk.Label(frame,text="電流値")
-label_amp.grid(row=1,column=0)
-label_A=tk.Label(frame,text="mA")
-label_A.grid(row=1,column=2)
-label_watt=tk.Label(frame,text="電力")
-label_watt.grid(row=2,column=0)
-label_W=tk.Label(frame,text="mW")
-label_W.grid(row=2,column=2)
-label_temp=tk.Label(frame,text="温度")
-label_temp.grid(row=3,column=0)
-label_T=tk.Label(frame,text="℃")
-label_T.grid(row=3,column=2)
-label_count=tk.Label(frame,text="カウント")
-label_count.grid(row=4,column=0)
-label_filename=tk.Label(frame,text="ファイル名")
-label_filename.grid(row=5,column=0)
-
-#テキストボックスの作成
-box_volt=tk.Label(frame,textvariable=volt)#出力用
-box_volt.grid(row=0,column=1)
-box_amp=tk.Label(frame,textvariable=amp)#出力用
-box_amp.grid(row=1,column=1)
-box_watt=tk.Label(frame,textvariable=watt)#出力用
-box_watt.grid(row=2,column=1)
-box_temp=tk.Label(frame,textvariable=temp)#出力用
-box_temp.grid(row=3,column=1)
-box_count=tk.Label(frame,textvariable=count)#出力用
-box_count.grid(row=4,column=1)
-box_filename=tk.Entry(frame,width=10)#csvのファイル名を入力するところ
-box_filename.grid(row=5,column=1)#何も入力していないとエラーになる
-
-var=tk.IntVar()
-var.set(0)
-LRturn=tk.IntVar()
-LRturn.set(1)
-button_turn=tk.Radiobutton(frame,text="回転させる",variable=var,value=1)
-button_turn.grid(row=0,column=3)
-button_turn=tk.Radiobutton(frame,text="回転させない",variable=var,value=0)
-button_turn.grid(row=1,column=3)
-button_turn=tk.Radiobutton(frame,text="時計回り",variable=LRturn,value=1)
-button_turn.grid(row=2,column=3)
-button_turn=tk.Radiobutton(frame,text="反時計回り",variable=LRturn,value=0)
-button_turn.grid(row=3,column=3)
-box_turn=tk.Entry(frame,text="回転させる回数", width=5)
-box_turn.grid(row=4,column=3)
-
-
-#スタートボタンの作成
-button=tk.Button(frame,text="スタート")#スタートボタンの配置、押したらdef start()が動く
-button.grid(row=6,column=3)
-
-
-
-#チェックボックスの作成
-bln = tk.BooleanVar()
-bln.set(True)
-
-chk = tk.Checkbutton(
-    main_window,
-    variable=bln,
-    onvalue=True,
-    offvalue=False,
-    text="終了したとき初期位置に戻る")
-chk.place(x=100, y=180)
-
-
-#終了するボタンの作成
-button = tk.Button(frame, text="終了する")
-button.grid(row=30,column=3)
-
-
-main_window.mainloop()
-
-'''
