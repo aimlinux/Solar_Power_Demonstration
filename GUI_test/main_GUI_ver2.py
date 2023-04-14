@@ -21,6 +21,18 @@ import time
 import threading
 
 
+BUTTON_OPTIONS = {
+    "fg": "#fff0f5",
+    "bg": "#0b0b33",
+    "activebackground": "#77ffd4",
+    "activeforeground": "#ff1493",
+    "cursor": "xterm",
+    "highlightbackground": "#483d8b",
+}
+main_cursors = "left_ptr"
+button_cursors = "X_corsor"
+
+
 
 
 # アプリケーション（GUI）クラス
@@ -32,10 +44,6 @@ class Application(tk.Frame):
 
         self.create_widgets()
         
-            
-    def exit_tk():
-        main_window.destroy
-
     def create_widgets(self):
         
         
@@ -139,24 +147,45 @@ class Application(tk.Frame):
         
         
         #実行・停止
-        button_start = tk.Button(fm_main, text="スタート", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10)#スタートボタンの配置、押したらdef start()が動く
+        button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10)#スタートボタンの配置、押したらdef start()が動く
         button_start.grid(row=7, column=4, columnspan=2, padx=20, pady=10, sticky=tk.SW)
         
-        button_stop = tk.Button(fm_main, text="一時停止", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10)
+        button_stop = tk.Button(fm_main, text="一時停止", **BUTTON_OPTIONS, font=("Arial", 12), width=10)
         button_stop.grid(row=7, column=5, columnspan=2, padx=40, pady=10, sticky=tk.SW)
         
         bln = tk.BooleanVar()
-        bln.set(True)
+        bln.set(False)
         chk = tk.Checkbutton(fm_main, bg="#add8e6", variable=bln, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 10))
         chk.grid(row=8, column=4, columnspan=2, padx=20, pady=10, sticky=tk.W)
         
-        button_stop = tk.Button(fm_main, text="終了", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10, command=exit_tk)
+        button_stop = tk.Button(fm_main, text="終了", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.exit_tk)
         button_stop.grid(row=9, column=5, columnspan=2, padx=45, pady=10, sticky=tk.W)
-        
         
         
                 
         print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
+        
+        
+        
+                
+    def exit_tk(self):
+        
+        if bln.get():
+            messagebox.showinfo("初期位置に戻るプログラムを実行します。")
+        else:
+            #第三引数のオプションについて：
+            #detail : 詳細メッセージ 
+            #icon : アイコン設定（info, warning, error, question）
+            res = messagebox.askquestion("title", "アプリケーションを終了しますか？", icon="warning")
+            print("askyesno", res)
+
+            if res == "yes":
+                self.master.quit()
+                #main_window.destroy
+            elif res == "no":
+                messagebox.showinfo("戻る", "アプリケーションを続けます。", icon="info")
+            
+        
 
 # 実行
 main_window = tk.Tk()        
