@@ -22,6 +22,11 @@ import threading
 
 
 
+def exit_ver1():
+    exit
+    
+
+
 # アプリケーション（GUI）クラス
 class Application(tk.Frame):
     DEBUG_LOG = True
@@ -144,8 +149,10 @@ class Application(tk.Frame):
         chk = tk.Checkbutton(fm_main, bg="#add8e6", variable=bln, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 10))
         chk.grid(row=8, column=4, columnspan=2, padx=20, pady=10, sticky=tk.W)
         
-        button_stop = tk.Button(fm_main, text="終了", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10)
+        button_stop = tk.Button(fm_main, text="終了", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10, command=main_window.destroy)
         button_stop.grid(row=9, column=5, columnspan=2, padx=45, pady=10, sticky=tk.W)
+        
+        
         
                 
         print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
@@ -155,6 +162,6 @@ main_window = tk.Tk()
 myapp = Application(master=main_window)
 myapp.master.title("太陽光発電システムを用いた金融教材") # メインウィンドウの名前
 myapp.master.geometry("760x580") # ウィンドウの幅と高さピクセル単位で指定（width x height）
-#myapp.master.geometry("720x480")
+#myapp.master.geometry("1024x600")がラズパイ7インチモニターに多い解像度
 
 myapp.mainloop()
