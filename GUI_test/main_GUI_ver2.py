@@ -22,10 +22,6 @@ import threading
 
 
 
-def exit_ver1():
-    exit
-    
-
 
 # アプリケーション（GUI）クラス
 class Application(tk.Frame):
@@ -35,8 +31,13 @@ class Application(tk.Frame):
         self.pack()
 
         self.create_widgets()
+        
+            
+    def exit_tk():
+        main_window.destroy
 
     def create_widgets(self):
+        
         
         
         volt = tk.StringVar()
@@ -149,7 +150,7 @@ class Application(tk.Frame):
         chk = tk.Checkbutton(fm_main, bg="#add8e6", variable=bln, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 10))
         chk.grid(row=8, column=4, columnspan=2, padx=20, pady=10, sticky=tk.W)
         
-        button_stop = tk.Button(fm_main, text="終了", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10, command=main_window.destroy)
+        button_stop = tk.Button(fm_main, text="終了", fg="#fff0f5", bg="#0b0b33", font=("Arial", 12), width=10, command=exit_tk)
         button_stop.grid(row=9, column=5, columnspan=2, padx=45, pady=10, sticky=tk.W)
         
         
