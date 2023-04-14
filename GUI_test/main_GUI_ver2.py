@@ -26,12 +26,9 @@ BUTTON_OPTIONS = {
     "bg": "#0b0b33",
     "activebackground": "#77ffd4",
     "activeforeground": "#ff1493",
-    "cursor": "xterm",
+    "cursor": "iron_cross",
     "highlightbackground": "#483d8b",
 }
-main_cursors = "left_ptr"
-button_cursors = "X_corsor"
-
 
 
 
@@ -155,7 +152,7 @@ class Application(tk.Frame):
         
         bln = tk.BooleanVar()
         bln.set(False)
-        chk = tk.Checkbutton(fm_main, bg="#add8e6", variable=bln, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 10))
+        chk = tk.Checkbutton(fm_main, bg="#add8e6", selectcolor="#ffe4e1", variable=bln, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 10))
         chk.grid(row=8, column=4, columnspan=2, padx=20, pady=10, sticky=tk.W)
         
         button_stop = tk.Button(fm_main, text="終了", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.exit_tk)
@@ -169,21 +166,22 @@ class Application(tk.Frame):
         
                 
     def exit_tk(self):
-        
+        '''
         if bln.get():
             messagebox.showinfo("初期位置に戻るプログラムを実行します。")
         else:
-            #第三引数のオプションについて：
-            #detail : 詳細メッセージ 
-            #icon : アイコン設定（info, warning, error, question）
-            res = messagebox.askquestion("title", "アプリケーションを終了しますか？", icon="warning")
-            print("askyesno", res)
+        '''
+        #第三引数のオプションについて：
+        #detail : 詳細メッセージ 
+        #icon : アイコン設定（info, warning, error, question）
+        res = messagebox.askquestion("title", "アプリケーションを終了しますか？", icon="warning")
+        print("askyesno", res)
 
-            if res == "yes":
-                self.master.quit()
-                #main_window.destroy
-            elif res == "no":
-                messagebox.showinfo("戻る", "アプリケーションを続けます。", icon="info")
+        if res == "yes":
+            self.master.quit()
+            #main_window.destroy
+        elif res == "no":
+            messagebox.showinfo("戻る", "アプリケーションを続けます。", icon="info")
             
         
 
