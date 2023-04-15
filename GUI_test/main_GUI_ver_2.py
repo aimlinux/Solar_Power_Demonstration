@@ -21,12 +21,20 @@ import time
 import threading
 
 
+#csvの保存先
+dir_op_path = '/home/pi/kakuda/csv'#''の中に保存先のディレクトリを指定
+
+#ピンのセットアップa
+direction = 20
+step = 21
+
+
 BUTTON_OPTIONS = {
     "fg": "#fff0f5",
     "bg": "#0b0b33",
     "activebackground": "#77ffd4",
     "activeforeground": "#ff1493",
-    "cursor": "iron_cross",
+    "cursor": "man",
     "highlightbackground": "#483d8b",
 }
 
@@ -118,10 +126,18 @@ class Application(tk.Frame):
         
         
         #ファイルの名前入力用
-        label_filename=tk.Label(fm_main, text="ファイル名を選択：", bg="#add8e6", font=("Arial", 10), height=2)
-        label_filename.grid(row=2, column=4, padx=10, pady=10, sticky=tk.W)
-        box_filename=tk.Entry(fm_main, bg="#e0ffff", font=("Arial", 13), width=13)#csvのファイル名を入力するところ
-        box_filename.grid(row=2, column=5, padx=10, pady=10)#何も入力していないとエラーになる
+        label_filename=tk.Label(fm_main, text="ファイル名：", bg="#add8e6", font=("Arial", 10), height=2)
+        label_filename.grid(row=2, column=4, padx=2, pady=10, sticky=tk.W)
+        # textvariableは一度selfで宣言しないといけないみたい...
+        #StringVar：文字列を扱う, IntVar：整数を扱う, DoubleVar：浮遊小数点を扱う, BooleanVar：真偽値（True/False）を扱う
+        self.filename_value = tk.StringVar()
+        box_filename=tk.Entry(fm_main, bg="#e0ffff", font=("Arial", 13), width=13, textvariable=self.filename_value) #csvのファイル名を入力するところ
+        box_filename.insert(tk.END, u'sample.csv')
+        box_filename.grid(row=2, column=5, padx=2, pady=10, sticky=tk.W) #何も入力していないとエラーになる
+        
+        button_filename = tk.Button(fm_main, text="変更", **BUTTON_OPTIONS, font=("Arial", 10), width=6, command=self.change_filename)
+        button_filename.grid(row=2, column=6, padx=2, pady=10, sticky=tk.W)
+        
         
         var = tk.IntVar()
         var.set(0)
@@ -144,7 +160,7 @@ class Application(tk.Frame):
         
         
         #実行・停止
-        button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10)#スタートボタンの配置、押したらdef start()が動く
+        button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10) #def start()
         button_start.grid(row=7, column=4, columnspan=2, padx=20, pady=10, sticky=tk.SW)
         
         button_stop = tk.Button(fm_main, text="一時停止", **BUTTON_OPTIONS, font=("Arial", 12), width=10)
@@ -164,21 +180,38 @@ class Application(tk.Frame):
         
         
         
+        
+        
+    def filename(self):
+        fn = self.filename_value.get()
+        print(fn)
+        return fn
+    
+    
+    def change_filename(self):
+        fn = str(self.filename_value.get())
+        res = messagebox.showinfo("title", f" csvファイルは {dir_op_path}/{fn}\n に保存されます。")
+        print("ChangeFileName", res)
+        
+        
                 
+    #終了ボタンが押されたとき
     def exit_tk(self):
         
         if self.check_value.get():
             #第三引数のオプションについて：
             #detail : 詳細メッセージ 
             #icon : アイコン設定（info, warning, error, question）
-            res = messagebox.askquestion("title", "初期位置に戻るプログラムを実行しますか？", icon="info")
-            print("ask", res)
+            res = messagebox.askquestion("title", "初期位置に戻るプログラムを実行しますか？", detail="※※ここに初期位置に戻るプログラムを書いていきます。\n　　まだ条件分岐は行われません。", icon="info")
+            print("InitialPosition", res)
+            fn = self.filename_value.get()
+            print(fn)
             
             # ----ここから初期位置に戻るプログラムを記載していく----
         
         else:
             res = messagebox.askquestion("title", "アプリケーションを終了しますか？", icon="warning")
-            print("askyesno", res)
+            print("EndYesNo", res)
             if res == "yes":
                 self.master.quit() #tkinterFrameの終了
                 #main_window.destroy
