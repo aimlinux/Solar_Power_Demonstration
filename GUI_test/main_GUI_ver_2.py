@@ -62,7 +62,7 @@ class Application(tk.Frame):
         count = tk.StringVar()
         value = tk.StringVar()
         
-        #ペインウィンドウ
+        #メインウィンドウ作成
         pw_main = tk.PanedWindow(self.master, bg="#add8e6", orient='vertical')
         pw_main.pack(expand=True, fill = tk.BOTH, side="left")
         
