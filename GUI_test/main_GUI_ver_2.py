@@ -157,7 +157,7 @@ class Application(tk.Frame):
         label_turn.grid(row=5, column=4)
         self.box_turn = tk.StringVar()
         box_turn = tk.Entry(fm_main, fg="#191970", bg="#e0ffff", font=("Arial", 13), width=4, textvariable=self.box_turn)
-        box_turn.insert(tk.END, u'100')
+        box_turn.insert(tk.END, u'10')
         box_turn.grid(row=5, column=5, sticky=tk.W)
         
         
