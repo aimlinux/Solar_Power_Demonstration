@@ -182,6 +182,7 @@ class Application(tk.Frame):
         
         
         
+        
     def filename(self):
         fn = self.filename_value.get()
         print(fn)
@@ -194,7 +195,18 @@ class Application(tk.Frame):
         print("ChangeFileName", res)
         
         
-                
+        
+        
+    def start(self):
+        messagebox.showinfo("スタートが押されたときの処理を記述していきます。")
+        file_name = self.filename_value.get()
+        print(file_name)
+        
+        
+    def dual_thread(self):#
+        thread = threading.Thread(target=start)
+        thread.start()      
+        
     #終了ボタンが押されたとき
     def exit_tk(self):
         
@@ -204,10 +216,16 @@ class Application(tk.Frame):
             #icon : アイコン設定（info, warning, error, question）
             res = messagebox.askquestion("title", "初期位置に戻るプログラムを実行しますか？", detail="※※ここに初期位置に戻るプログラムを書いていきます。\n　　まだ条件分岐は行われません。", icon="info")
             print("InitialPosition", res)
-            fn = self.filename_value.get()
-            print(fn)
-            
-            # ----ここから初期位置に戻るプログラムを記載していく----
+            if res == "yes":
+                messagebox.showinfo("title", "初期位置に戻るプログラムを実行します。", icon="info")
+                                
+                # ----ここから初期位置に戻るプログラムを記載していく----
+                
+                
+                
+            elif res == "no":
+                messagebox.showinfo("title", "アプリケーションを続けます。", icon="info")
+                
         
         else:
             res = messagebox.askquestion("title", "アプリケーションを終了しますか？", icon="warning")
