@@ -139,28 +139,30 @@ class Application(tk.Frame):
         button_filename.grid(row=2, column=6, padx=2, pady=10, sticky=tk.W)
         
         
-        var = tk.IntVar()
-        var.set(0)
-        LRturn = tk.IntVar()
-        LRturn.set(1)
-        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="回転させる", variable=var, value=1)
+        self.var = tk.IntVar()
+        self.var.set(0)
+        self.LRturn = tk.IntVar()
+        self.LRturn.set(1)
+        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="回転させる", variable=self.var, value=1)
         button_turn.grid(row=3, column=4)
-        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="回転させない", variable=var, value=0)
+        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="回転させない", variable=self.var, value=0)
         button_turn.grid(row=3, column=5, sticky=tk.W)
-        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="時計回り", variable=LRturn, value=1)
+        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="時計回り", variable=self.LRturn, value=1)
         button_turn.grid(row=4, column=4)
-        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="反時計回り", variable=LRturn, value=0)
+        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="反時計回り", variable=self.LRturn, value=0)
         button_turn.grid(row=4, column=5, sticky=tk.W)
         
         #回転させる回数の入力用
         label_turn = tk.Label(fm_main, text="回転させる数 ：  ", bg="#add8e6", font=("Arial", 9), height=2)
         label_turn.grid(row=5, column=4)
-        box_turn = tk.Entry(fm_main, fg="#191970", bg="#e0ffff", font=("Arial", 13), width=4)
+        self.box_turn = tk.StringVar()
+        box_turn = tk.Entry(fm_main, fg="#191970", bg="#e0ffff", font=("Arial", 13), width=4, textvariable=self.box_turn)
+        box_turn.insert(tk.END, u'100')
         box_turn.grid(row=5, column=5, sticky=tk.W)
         
         
         #実行・停止
-        button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10) #def start()
+        button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.dual_thread) #def start()
         button_start.grid(row=7, column=4, columnspan=2, padx=20, pady=10, sticky=tk.SW)
         
         button_stop = tk.Button(fm_main, text="一時停止", **BUTTON_OPTIONS, font=("Arial", 12), width=10)
@@ -196,18 +198,28 @@ class Application(tk.Frame):
         
         
         
+    
+    #スタートボタンが押されたときの処理
+    def start_tk(self):
+        messagebox.showinfo("title", "スタートが押されたときの処理を記述していきます。", icon="info")
+        fn = str(self.filename_value.get())
+        print(fn)
+        file_name = fn
+        messagebox.showerror("テスト", "csvファイルは" + str(file_name) + "に保存されています。")
         
-    def start(self):
-        messagebox.showinfo("スタートが押されたときの処理を記述していきます。")
-        file_name = self.filename_value.get()
-        print(file_name)
-        
+        var_value = self.var.get()
+        LR = self.LRturn.get()
+        intturn=int(self.box_turn.get())
+        print("var_valueの値：" + str(var_value) + "\nLRの値：" + str(LR) + "\n回転数：" + str(intturn))
         
     def dual_thread(self):#
-        thread = threading.Thread(target=start)
+        thread = threading.Thread(target=self.start_tk)
         thread.start()      
         
-    #終了ボタンが押されたとき
+        
+        
+        
+    #終了ボタンが押されたときの処理
     def exit_tk(self):
         
         if self.check_value.get():
