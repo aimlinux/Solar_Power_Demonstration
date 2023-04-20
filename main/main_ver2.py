@@ -193,10 +193,10 @@ class Application(tk.Frame):
         #label_space.grid(row=9, colum=5, columnspan=2, padx=45, pady=10)
         
         #実行・停止
-        button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.dual_thread) #def start()
+        button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.dual_thread)
         button_start.grid(row=6, column=4, columnspan=2, padx=20, pady=10, sticky=tk.SW)
         
-        button_stop = tk.Button(fm_main, text="一時停止", **BUTTON_OPTIONS, font=("Arial", 12), width=10)
+        button_stop = tk.Button(fm_main, text="一時停止", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.stop_tk)
         button_stop.grid(row=6, column=5, columnspan=2, padx=40, pady=10, sticky=tk.SW)
         
         
@@ -234,13 +234,13 @@ class Application(tk.Frame):
         GPIO.output(step, GPIO.LOW)
         
     
+    
     #スタートボタンが押されたときの処理
     def start_tk(self):
-        messagebox.showinfo("title", "スタートが押されたときの処理を記述していきます。", icon="info")
+        messagebox.showinfo("title", "スタートが押されたら...", icon="info")
         fn = str(self.filename_value.get())
         print(fn)
         file_name = fn
-        #messagebox.showerror("テスト", "csvファイルは" + str(file_name) + "に保存されています。")
         
         var_value = self.var.get()
         LR = self.LRturn.get()
@@ -272,7 +272,7 @@ class Application(tk.Frame):
                 Volt = round(Volt_ini, 3)
                 b_res = res #エラーの時の代入用
                 self.volt.set(str(Volt))
-    
+                
                 check = subprocess.getoutput("i2cget -y 1 0x40 0x01 w")
                 if check == "Error: Read failed":
                     resA = b_resA
@@ -298,14 +298,14 @@ class Application(tk.Frame):
                 Watt_ini = Volt * Amp
                 Watt = round(Watt_ini, 3)
                 
-                #kkokode hyouzi
                 self.watt.set(str(Watt)) #check
-               
+                
                 self.count.set(str(Count))
                 
                 print(Count)
                 
-                csv_value.append(Count)#配列に各要素を入力
+                #配列に各要素を入力
+                csv_value.append(Count)
                 csv_value.append(Volt)
                 csv_value.append(Amp)
                 csv_value.append(Watt)
@@ -323,12 +323,17 @@ class Application(tk.Frame):
             
                 
                     
-    
-    def dual_thread(self):#
+    #start_tkを並列処理で実行する
+    def dual_thread(self):
         thread = threading.Thread(target=self.start_tk)
         thread.start()      
         
+    
+    #一時停止ボタンが押されたときの処理
+    def stop_tk(self):
+        messagebox.showinfo("title", "一時停止のプログラムを実行します")
         
+        # ---- ここから一時停止のプログラムを記載していく ----
         
         
     #終了ボタンが押されたときの処理

@@ -77,8 +77,8 @@ class Application(tk.Frame):
         #各ラベル作成
         # padx, pady ：外側の横、縦の隙間
         # row, column : 行、列
-        #label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=10)
-        #label_space.grid(row=0, column=0, padx=40, pady=10)
+        label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=10)
+        label_space.grid(row=0, column=0, padx=40, pady=10)
         
         label_head = tk.Label(fm_main, text="   ~~計測された各値~~", bg="#add8e6", font=("Arial", 15), height=2)
         label_head.grid(row=1, column=0, columnspan=3)
