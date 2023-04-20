@@ -160,15 +160,15 @@ class Application(tk.Frame):
         box_turn.insert(tk.END, u'10')
         box_turn.grid(row=5, column=5, sticky=tk.W)
         
-        label_space = tk.Label(fm_main, text="", width=5)
-        label_space.grid(row=9, colum=5, columnspan=2, padx=45, pady=10)
+        #label_space = tk.Label(fm_main, text="", width=5)
+        #label_space.grid(row=9, colum=5, columnspan=2, padx=45, pady=10)
         
         #実行・停止
         button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.dual_thread) #def start()
         button_start.grid(row=7, column=4, columnspan=2, padx=20, pady=10, sticky=tk.SW)
         
         button_stop = tk.Button(fm_main, text="一時停止", **BUTTON_OPTIONS, font=("Arial", 12), width=10)
-        button_stop.grid(row=7, column=6, columnspan=2, padx=40, pady=10, sticky=tk.SW)
+        button_stop.grid(row=7, column=5, columnspan=2, padx=40, pady=10, sticky=tk.SW)
         
         
         self.check_value = tk.BooleanVar(value=False)
