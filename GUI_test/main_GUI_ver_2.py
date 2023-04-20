@@ -16,6 +16,7 @@ from time import time
 import sys
 from time import sleep
 import time
+import subprocess
 #import RPi.GPIO as GPIO #ラズパイのピン指定用(windowsじゃ動かない)
 #import smbus
 import threading
@@ -110,15 +111,20 @@ class Application(tk.Frame):
         label_count.grid(row=6, column=0, padx=10, pady=10)
 
         #各値の出力用
-        box_volt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=volt)
+        self.volt = tk.StringVar()
+        box_volt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.volt)
         box_volt.grid(row=2, column=1)
-        box_amp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=amp)
+        self.amp = tk.StringVar()
+        box_amp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.amp)
         box_amp.grid(row=3, column=1)
-        box_watt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=watt)
+        self.watt = tk.StringVar()
+        box_watt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.watt)
         box_watt.grid(row=4, column=1)
-        box_temp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=temp)
+        self.temp = tk.StringVar()
+        box_temp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.temp)
         box_temp.grid(row=5, column=1)
-        box_count = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=count)
+        self.count = tk.StringVar()
+        box_count = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.count)
         box_count.grid(row=6, column=1)
 
         label_space = tk.Label(fm_main, text="", bg="#add8e6", height=2, width=15)
@@ -245,8 +251,13 @@ class Application(tk.Frame):
             res = messagebox.askquestion("title", "アプリケーションを終了しますか？", icon="warning")
             print("EndYesNo", res)
             if res == "yes":
-                self.master.quit() #tkinterFrameの終了
+                #self.master.quit() #tkinterFrameの終了
                 #main_window.destroy
+                cmd="quit"
+                p = subprocess.Popen("exec " + cmd, shell=True)       
+                # execで実行
+                p.kill()                                            
+                # コマンドを停止
             elif res == "no":
                 messagebox.showinfo("戻る", "アプリケーションを続けます。", icon="info")
                 
