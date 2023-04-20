@@ -76,8 +76,8 @@ class Application(tk.Frame):
         #各ラベル作成
         # padx, pady ：外側の横、縦の隙間
         # row, column : 行、列
-        label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=10)
-        label_space.grid(row=0, column=0, padx=40, pady=10)
+        #label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=10)
+        #label_space.grid(row=0, column=0, padx=40, pady=10)
         
         label_head = tk.Label(fm_main, text="   ~~計測された各値~~", bg="#add8e6", font=("Arial", 15), height=2)
         label_head.grid(row=1, column=0, columnspan=3)
@@ -90,7 +90,7 @@ class Application(tk.Frame):
         
         
         
-        label_volt = tk.Label(fm_main, text="〇電圧値(V)", bg="#add8e6", font=("Arial", 10), height=2, width=10)
+        label_volt = tk.Label(fm_main, text="〇電圧値(V)", bg="#add8e6", font=("Arial", 10), height=1, width=10)
         label_volt.grid(row=2, column=0, padx=40, pady=10)
         label_V = tk.Label(fm_main, text="V", bg="#add8e6", font=("Arial", 10))
         label_V.grid(row=2, column=2, padx=10, pady=10)
@@ -110,7 +110,7 @@ class Application(tk.Frame):
         label_count.grid(row=6, column=0, padx=10, pady=10)
 
         #各値の出力用
-        box_volt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=volt)
+        box_volt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=volt)
         box_volt.grid(row=2, column=1)
         box_amp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=amp)
         box_amp.grid(row=3, column=1)
