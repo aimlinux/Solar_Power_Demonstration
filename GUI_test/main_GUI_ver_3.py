@@ -16,10 +16,14 @@ from time import time
 import sys
 from time import sleep
 import time
-import subprocess
 #import RPi.GPIO as GPIO #ラズパイのピン指定用(windowsじゃ動かない)
 #import smbus
 import threading
+import subprocess
+import json
+json_file = open('setting.json')
+b = json.load(json_file)
+print(b)
 
 
 #グローバル変数（一時停止の実行フラグ）
@@ -149,7 +153,7 @@ class Application(tk.Frame):
         
         
         self.var = tk.IntVar()
-        self.var.set(0)
+        self.var.set(1)
         self.LRturn = tk.IntVar()
         self.LRturn.set(1)
         button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="回転させる", variable=self.var, value=1)
@@ -166,7 +170,7 @@ class Application(tk.Frame):
         label_turn.grid(row=5, column=4)
         self.box_turn = tk.StringVar()
         box_turn = tk.Entry(fm_main, fg="#191970", bg="#e0ffff", font=("Arial", 13), width=4, textvariable=self.box_turn)
-        box_turn.insert(tk.END, u'10')
+        box_turn.insert(tk.END, u'20')
         box_turn.grid(row=5, column=5, sticky=tk.W)
         
         #label_space = tk.Label(fm_main, text="", width=5)
@@ -221,8 +225,8 @@ class Application(tk.Frame):
         messagebox.showinfo("title", "スタートが押されたときの処理を記述していきます。", icon="info")
         fn = str(self.filename_value.get())
         print(fn)
+        print("csvファイルの保存先：" + str(fn))
         file_name = fn
-        messagebox.showerror("テスト", "csvファイルは" + str(file_name) + "に保存されています。")
         
         var_value = self.var.get()
         LR = self.LRturn.get()
@@ -230,20 +234,25 @@ class Application(tk.Frame):
         print("var_valueの値：" + str(var_value) + "\nLRの値：" + str(LR) + "\n回転数：" + str(intturn))
         
         
-        while True:
+        Count = 0
+        for Count in range(1, intturn + 1):
             
             if is_stop == False:
                 print("is_stop == False:")
                 #スタートボタンのテキストを「再開」に変更
-                self.button_start.config(text="再開")
+                self.button_start.config(text = "再開")
+                return_Count = Count
                 break
                 
             elif is_stop == True:
-                print("is_stop == True:")
+                print("is_stop == True:" + str(Count) + "count")
+                self.count.set(str(Count))
+                Count = Count + 1
                 time.sleep(1)
             
             else:
                 print("グローバル変数に関するエラーが発生")
+                break
             
             
     #start_tkを並列処理で実行する

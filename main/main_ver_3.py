@@ -16,10 +16,10 @@ from time import time
 import sys
 from time import sleep
 import time
-import subprocess
 import RPi.GPIO as GPIO #ラズパイのピン指定用(windowsじゃ動かない)
 import smbus
 import threading
+import subprocess
 
 
 #グローバル変数（一時停止の実行フラグ）
@@ -173,7 +173,7 @@ class Application(tk.Frame):
         
         
         self.var = tk.IntVar()
-        self.var.set(0)
+        self.var.set(1)
         self.LRturn = tk.IntVar()
         self.LRturn.set(1)
         button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="回転させる", variable=self.var, value=1)
@@ -190,15 +190,15 @@ class Application(tk.Frame):
         label_turn.grid(row=4, column=4)
         self.box_turn = tk.StringVar()
         box_turn = tk.Entry(fm_main, fg="#191970", bg="#e0ffff", font=("Arial", 13), width=4, textvariable=self.box_turn)
-        box_turn.insert(tk.END, u'10')
+        box_turn.insert(tk.END, u'20')
         box_turn.grid(row=4, column=5, sticky=tk.W)
         
         #label_space = tk.Label(fm_main, text="", width=5)
         #label_space.grid(row=9, colum=5, columnspan=2, padx=45, pady=10)
         
         #実行・停止
-        button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.dual_thread)
-        button_start.grid(row=6, column=4, columnspan=2, padx=20, pady=10, sticky=tk.SW)
+        self.button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.dual_thread)
+        self.button_start.grid(row=6, column=4, columnspan=2, padx=20, pady=10, sticky=tk.SW)
         
         button_stop = tk.Button(fm_main, text="一時停止", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.stop_tk)
         button_stop.grid(row=6, column=5, columnspan=2, padx=40, pady=10, sticky=tk.SW)
@@ -269,9 +269,14 @@ class Application(tk.Frame):
                 
                 #グローバル変数（一時停止のフラグがFalseだったらCountとintturnの値を保存してfor文を抜ける）
                 if is_stop == False:
+                    print("is_stop == False:")
+                    #スタートボタンのテキストを「再開」に変更
+                    self.button_start.config(text = "再開")
+                    
                     break
                 
                 elif is_stop == True:
+                    print("is_stop == True:" + str(Count) + "count")
                 
                     csv_value = []
                     
@@ -333,13 +338,13 @@ class Application(tk.Frame):
                     sleep(1)
                     
                 else:
-                    messagebox.showerror("title", "グローバル変数に関するエラーが発生！")
-                    
+                    print("グローバル変数に関するエラーが発生")
+                    break
+                
             f.close()
         
             messagebox.showinfo("title", "success!!!!!!!!", icon="info") # check MOZC
-        
-        
+            
             
                 
                     
