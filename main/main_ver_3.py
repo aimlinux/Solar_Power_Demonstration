@@ -25,6 +25,9 @@ import subprocess
 #グローバル変数（一時停止の実行フラグ）
 is_stop = True
 
+Count = 0
+restart_Count = 0
+
 
 #csvの保存先
 dir_op_path = '/home/pi/kakuda/csv'#''の中に保存先のディレクトリを指定
@@ -272,7 +275,7 @@ class Application(tk.Frame):
                     print("is_stop == False:")
                     #スタートボタンのテキストを「再開」に変更
                     self.button_start.config(text = "再開")
-                    
+                    restart_Count = Count
                     break
                 
                 elif is_stop == True:

@@ -20,15 +20,13 @@ import time
 #import smbus
 import threading
 import subprocess
-import json
-json_file = open('setting.json')
-b = json.load(json_file)
-print(b)
 
 
 #グローバル変数（一時停止の実行フラグ）
 is_stop = True
 
+Count = 0
+restart_Count = 0
 
 #csvの保存先
 dir_op_path = '/home/pi/kakuda/csv'#''の中に保存先のディレクトリを指定
@@ -211,13 +209,16 @@ class Application(tk.Frame):
         print("ChangeFileName", res)
         
         
-        
-    
+
     #スタートボタンが押されたときの処理
     def start_tk(self):
         
-        #スタートボタンのテキストを「スタート」に変更
-        self.button_start.config(text="スタート")
+        #スタートボタンのテキストの値を取得（「再開」であればrestart_CountをCountに代入）
+        button_text = self.button_start.cget("text")
+        if button_text == "再開":
+            #スタートボタンのテキストを「スタート」に変更
+            self.button_start.config(text="スタート")
+            
         
         global is_stop
         is_stop = True
@@ -234,14 +235,13 @@ class Application(tk.Frame):
         print("var_valueの値：" + str(var_value) + "\nLRの値：" + str(LR) + "\n回転数：" + str(intturn))
         
         
-        Count = 0
         for Count in range(1, intturn + 1):
             
             if is_stop == False:
                 print("is_stop == False:")
                 #スタートボタンのテキストを「再開」に変更
                 self.button_start.config(text = "再開")
-                return_Count = Count
+                restart_Count = Count
                 break
                 
             elif is_stop == True:
