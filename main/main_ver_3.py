@@ -26,7 +26,7 @@ import subprocess
 is_stop = True
 
 Count = 0
-restart_Count = 0
+is_restart_Count = 0
 
 
 #csvの保存先
@@ -245,6 +245,16 @@ class Application(tk.Frame):
     #スタートボタンが押されたときの処理
     def start_tk(self):
         
+        
+        #スタートボタンのテキストの値を取得（「再開」であればrestart_CountをCountに代入）
+        button_text = self.button_start.cget("text")
+        if button_text == "再開":
+            #スタートボタンのテキストを「スタート」に変更
+            self.button_start.config(text = "スタート")
+            #global is_restart_Count
+            #Count = is_restart_Count
+            
+            
         global is_stop
         is_stop = True
         
@@ -275,7 +285,7 @@ class Application(tk.Frame):
                     print("is_stop == False:")
                     #スタートボタンのテキストを「再開」に変更
                     self.button_start.config(text = "再開")
-                    restart_Count = Count
+                    is_restart_Count = Count
                     break
                 
                 elif is_stop == True:
