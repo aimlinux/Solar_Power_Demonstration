@@ -20,6 +20,7 @@ import RPi.GPIO as GPIO #ラズパイのピン指定用(windowsじゃ動かな�
 import smbus
 import threading
 import subprocess
+import json
 
 
 #グローバル変数（一時停止の実行フラグ）
@@ -384,7 +385,7 @@ class Application(tk.Frame):
             #第三引数のオプションについて：
             #detail : 詳細メッセージ 
             #icon : アイコン設定（info, warning, error, question）
-            res = messagebox.askquestion("title", "初期位置に戻るプログラムを実行しますか？", detail="※※ここに初期位置に戻るプログラムを書いていきます。\n　　まだ条件分岐は行われません。", icon="info")
+            res = messagebox.askquestion("title", "初期位置に戻して終了しますか？", detail="※※ここに初期位置に戻るプログラムを書いていきます。\n　　まだ条件分岐は行われません。", icon="info")
             print("InitialPosition", res)
             if res == "yes":
                 messagebox.showinfo("title", "初期位置に戻るプログラムを実行します。", icon="info")
@@ -394,7 +395,7 @@ class Application(tk.Frame):
                 
                 
             elif res == "no":
-                messagebox.showinfo("title", "アプリケーションを続けます。", icon="info")
+                print("continue")
                 
         
         else:
@@ -405,9 +406,9 @@ class Application(tk.Frame):
                 cmd = "quit"
                 ps= subprocess.Popen("exec "+ cmd, shell = True)
                 ps.kill()
-                #main_window.destroy
+                
             elif res == "no":
-                messagebox.showinfo("戻る", "アプリケーションを続けます。", icon="info")
+                print("continue")
                 
         
 

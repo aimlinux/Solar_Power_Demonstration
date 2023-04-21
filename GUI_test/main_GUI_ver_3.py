@@ -20,6 +20,7 @@ import time
 #import smbus
 import threading
 import subprocess
+import json
 
 
 #グローバル変数（一時停止の実行フラグ）
@@ -291,7 +292,7 @@ class Application(tk.Frame):
                 
                 
             elif res == "no":
-                messagebox.showinfo("title", "アプリケーションを続けます。", icon="info")
+                print("continue")
                 
         
         else:
@@ -299,15 +300,14 @@ class Application(tk.Frame):
             print("EndYesNo", res)
             if res == "yes":
                 self.master.quit() #tkinterFrameの終了
-                #main_window.destroy
-                
                 #cmd="quit"
                 #p = subprocess.Popen("exec " + cmd, shell=True)       
                 # execで実行
                 #p.kill()                                            
                 # コマンドを停止
+                
             elif res == "no":
-                messagebox.showinfo("戻る", "アプリケーションを続けます。", icon="info")
+                print("continue")
                 
         
 
