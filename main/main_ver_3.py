@@ -22,6 +22,8 @@ import smbus
 import threading
 
 
+#グローバル変数（一時停止の実行フラグ）
+is_stop = True
 
 
 #csvの保存先
@@ -239,9 +241,14 @@ class Application(tk.Frame):
     
     #スタートボタンが押されたときの処理
     def start_tk(self):
+        
+        global is_stop
+        is_stop = True
+        
         messagebox.showinfo("title", "スタートが押されたら...", icon="info")
+        
         fn = str(self.filename_value.get())
-        print(fn)
+        print("csvファイルの保存先：" + str(fn))
         file_name = fn
         
         var_value = self.var.get()
@@ -257,66 +264,77 @@ class Application(tk.Frame):
             b_res = 0#
             b_resA = 0#
             
+            
             for Count in range(1, intturn + 1):
-                csv_value = []
                 
-                GPIO.output(direction, LR)
+                #グローバル変数（一時停止のフラグがFalseだったらCountとintturnの値を保存してfor文を抜ける）
+                if is_stop == False:
+                    break
                 
-                if var_value == 1:
-                    self.turn()# check!!
+                elif is_stop == True:
+                
+                    csv_value = []
                     
-                check = subprocess.getoutput("i2cget -y 1 0x40 0x02 w") #checkに値を入れる
-                if check == "Error: Read failed": #たまにエラーが起きるのでエラーの文字を受け取ったとき
-                    res = b_res #前回の値を代入
-                else:
-                    res =(int(check[4:6],16)*256+int(check[2:4],16))*1.25/1000 #エラーはかずにちゃんと値が取れた時
-                Volt_ini = res #電圧の代入
-                Volt = round(Volt_ini, 3)
-                b_res = res #エラーの時の代入用
-                self.volt.set(str(Volt))
-                
-                check = subprocess.getoutput("i2cget -y 1 0x40 0x01 w")
-                if check == "Error: Read failed":
-                    resA = b_resA
-                elif int(check[4:6],16)<128:
-                    resA = (int(check[4:6],16)*256+int(check[2:4],16))
-                else:
-                    resA = (int(check[4:6],16)*256+int(check[2:4],16)-256*256)
-                Amp = resA#電流の代入
-                b_resA = resA
-                self.amp.set(str(Amp))
-                
-                if Count == 1 or Count % 15 == 0 or Count == intturn:
-                    sleep(0.1)
-                    bus.write_word_data(address_adt7420, configration_adt7420, 0x00)
-                    word_data = bus.read_word_data(address_adt7420, register_adt7420)
-                    rdata = (word_data & 0xff00) >> 8 | (word_data & 0xff) << 8
-                    sdata = rdata >> 3
-                    data=sdata/16
-                    Temp = round(data, 1) #check
-                    self.temp.set(str(Temp))
-                    #csv_value.append(Temp)
+                    GPIO.output(direction, LR)
                     
-                Watt_ini = Volt * Amp
-                Watt = round(Watt_ini, 3)
-                
-                self.watt.set(str(Watt)) #check
-                
-                self.count.set(str(Count))
-                
-                print(Count)
-                
-                #配列に各要素を入力
-                csv_value.append(Count)
-                csv_value.append(Volt)
-                csv_value.append(Amp)
-                csv_value.append(Watt)
-                csv_value.append(self.temp.get())
-                
-                csv_writer.writerow(csv_value)
-                
-                sleep(1)
-                
+                    if var_value == 1:
+                        self.turn()# check!!
+                        
+                    check = subprocess.getoutput("i2cget -y 1 0x40 0x02 w") #checkに値を入れる
+                    if check == "Error: Read failed": #たまにエラーが起きるのでエラーの文字を受け取ったとき
+                        res = b_res #前回の値を代入
+                    else:
+                        res =(int(check[4:6],16)*256+int(check[2:4],16))*1.25/1000 #エラーはかずにちゃんと値が取れた時
+                    Volt_ini = res #電圧の代入
+                    Volt = round(Volt_ini, 3)
+                    b_res = res #エラーの時の代入用
+                    self.volt.set(str(Volt))
+                    
+                    check = subprocess.getoutput("i2cget -y 1 0x40 0x01 w")
+                    if check == "Error: Read failed":
+                        resA = b_resA
+                    elif int(check[4:6],16)<128:
+                        resA = (int(check[4:6],16)*256+int(check[2:4],16))
+                    else:
+                        resA = (int(check[4:6],16)*256+int(check[2:4],16)-256*256)
+                    Amp = resA#電流の代入
+                    b_resA = resA
+                    self.amp.set(str(Amp))
+                    
+                    if Count == 1 or Count % 15 == 0 or Count == intturn:
+                        sleep(0.1)
+                        bus.write_word_data(address_adt7420, configration_adt7420, 0x00)
+                        word_data = bus.read_word_data(address_adt7420, register_adt7420)
+                        rdata = (word_data & 0xff00) >> 8 | (word_data & 0xff) << 8
+                        sdata = rdata >> 3
+                        data=sdata/16
+                        Temp = round(data, 1) #check
+                        self.temp.set(str(Temp))
+                        #csv_value.append(Temp)
+                        
+                    Watt_ini = Volt * Amp
+                    Watt = round(Watt_ini, 3)
+                    
+                    self.watt.set(str(Watt)) #check
+                    
+                    self.count.set(str(Count))
+                    
+                    print(Count)
+                    
+                    #配列に各要素を入力
+                    csv_value.append(Count)
+                    csv_value.append(Volt)
+                    csv_value.append(Amp)
+                    csv_value.append(Watt)
+                    csv_value.append(self.temp.get())
+                    
+                    csv_writer.writerow(csv_value)
+                    
+                    sleep(1)
+                    
+                else:
+                    messagebox.showerror("title", "グローバル変数に関するエラーが発生！")
+                    
             f.close()
         
             messagebox.showinfo("title", "success!!!!!!!!", icon="info") # check MOZC
@@ -333,9 +351,12 @@ class Application(tk.Frame):
     
     #一時停止ボタンが押されたときの処理
     def stop_tk(self):
-        messagebox.showinfo("title", "一時停止のプログラムを実行します")
+        res = messagebox.showinfo("title", "一時停止のプログラムを実行します", icon="info")
+        print("stop", res)
         
-        # ---- ここから一時停止のプログラムを記載していく ----
+        global is_stop
+        is_stop = False
+        
         
         
     #終了ボタンが押されたときの処理

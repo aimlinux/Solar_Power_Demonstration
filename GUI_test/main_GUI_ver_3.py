@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from concurrent.futures import thread
 import tkinter as tk
 from tkinter import filedialog 
@@ -17,11 +17,13 @@ import sys
 from time import sleep
 import time
 import subprocess
-import RPi.GPIO as GPIO #ラズパイのピン指定用(windowsじゃ動かない)
-import smbus
+#import RPi.GPIO as GPIO #ラズパイのピン指定用(windowsじゃ動かない)
+#import smbus
 import threading
 
 
+#グローバル変数（一時停止の実行フラグ）
+is_stop = True
 
 
 #csvの保存先
@@ -30,28 +32,6 @@ dir_op_path = '/home/pi/kakuda/csv'#''の中に保存先のディレクトリを
 #ピンのセットアップa
 direction = 20
 step = 21
-
-GPIO.setwarnings(False)
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(direction, GPIO.OUT)
-GPIO.setup(step, GPIO.OUT)#highとlowを入れるとこ
-#GPIO.output(direction, 0)#回転の向き
-
-bus = smbus.SMBus(1)
-address_adt7420 = 0x48
-register_adt7420 = 0x00
-configration_adt7420 = 0x03
-
-csv_label = []#csvファイルの最初の行
-csv_label.append("count")
-csv_label.append("volt")
-csv_label.append("amp")
-csv_label.append("watt")
-csv_label.append("watth")
-csv_label.append("temp")
-csv_label.append("ohm")
-
 
 
 BUTTON_OPTIONS = {
@@ -62,7 +42,6 @@ BUTTON_OPTIONS = {
     "cursor": "man",
     "highlightbackground": "#483d8b",
 }
-
 
 
 # アプリケーション（GUI）クラス
@@ -101,55 +80,54 @@ class Application(tk.Frame):
         #各ラベル作成
         # padx, pady ：外側の横、縦の隙間
         # row, column : 行、列
-        #label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=10)
-        #label_space.grid(row=0, column=0, padx=40, pady=10)
+        label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=10)
+        label_space.grid(row=0, column=0, padx=40, pady=10)
         
         label_head = tk.Label(fm_main, text="   ~~計測された各値~~", bg="#add8e6", font=("Arial", 15), height=2)
         label_head.grid(row=1, column=0, columnspan=3)
         
-        #label_head = tk.Label(fm_main, text=" ~~詳細設定~~", bg="#add8e6", font=("Arial", 15), height=2)
-        #label_head.grid(row=1, column=4, columnspan=3, sticky=tk.W)
+        label_head = tk.Label(fm_main, text=" ~~詳細設定~~", bg="#add8e6", font=("Arial", 15), height=2)
+        label_head.grid(row=1, column=4, columnspan=3, sticky=tk.W)
         
         label_head = tk.Label(fm_main, text=" ~~実行・停止~~", bg="#add8e6", font=("Arial", 15), height=2)
-        label_head.grid(row=5, column=4, columnspan=3, sticky=tk.SW)
+        label_head.grid(row=6, column=4, columnspan=3, sticky=tk.SW)
         
         
         
-        label_volt = tk.Label(fm_main, text="〇電圧値(V)", bg="#add8e6", font=("Arial", 10), height=2, width=10)
+        label_volt = tk.Label(fm_main, text="〇電圧値(V)", bg="#add8e6", font=("Arial", 10), height=1, width=10)
         label_volt.grid(row=2, column=0, padx=40, pady=10)
         label_V = tk.Label(fm_main, text="V", bg="#add8e6", font=("Arial", 10))
         label_V.grid(row=2, column=2, padx=10, pady=10)
-        label_amp = tk.Label(fm_main, text="〇電流値(mA)", bg="#add8e6", font=("Arial", 10), height=1, width=10)
+        label_amp = tk.Label(fm_main, text="〇電流値(mA)", bg="#add8e6", font=("Arial", 10), height=2, width=10)
         label_amp.grid(row=3, column=0, padx=40, pady=10)
         label_A = tk.Label(fm_main, text="mA", bg="#add8e6", font=("Arial", 10))
         label_A.grid(row=3, column=2, padx=10, pady=10)
-        label_watt = tk.Label(fm_main, text="〇電力(mW)", bg="#add8e6", font=("Arial", 10), height=1, width=10)
+        label_watt = tk.Label(fm_main, text="〇電力(mW)", bg="#add8e6", font=("Arial", 10), height=2, width=10)
         label_watt.grid(row=4, column=0, padx=40, pady=10)
         label_W = tk.Label(fm_main, text="mW", bg="#add8e6", font=("Arial", 10))
         label_W.grid(row=4, column=2, padx=10, pady=10)
-        label_temp = tk.Label(fm_main, text="〇温度(℃)", bg="#add8e6", font=("Arial", 10), height=1, width=10)
+        label_temp = tk.Label(fm_main, text="〇温度(℃)", bg="#add8e6", font=("Arial", 10), height=2, width=10)
         label_temp.grid(row=5, column=0, padx=40, pady=10)
         label_T = tk.Label(fm_main, text="℃", bg="#add8e6", font=("Arial", 10))
         label_T.grid(row=5, column=2, padx=10, pady=10)
-        label_count = tk.Label(fm_main, text="〇カウント", bg="#add8e6", font=("Arial", 10), height=1, width=10)
+        label_count = tk.Label(fm_main, text="〇カウント", bg="#add8e6", font=("Arial", 10), height=2, width=10)
         label_count.grid(row=6, column=0, padx=10, pady=10)
 
         #各値の出力用
         self.volt = tk.StringVar()
-        self.amp = tk.StringVar()
-        self.watt = tk.StringVar()
-        self.temp = tk.StringVar()
-        self.count = tk.StringVar()
-        
         box_volt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.volt)
         box_volt.grid(row=2, column=1)
-        box_amp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.amp)
+        self.amp = tk.StringVar()
+        box_amp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.amp)
         box_amp.grid(row=3, column=1)
-        box_watt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.watt)
+        self.watt = tk.StringVar()
+        box_watt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.watt)
         box_watt.grid(row=4, column=1)
-        box_temp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.temp)
+        self.temp = tk.StringVar()
+        box_temp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.temp)
         box_temp.grid(row=5, column=1)
-        box_count = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.count)
+        self.count = tk.StringVar()
+        box_count = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.count)
         box_count.grid(row=6, column=1)
 
         label_space = tk.Label(fm_main, text="", bg="#add8e6", height=2, width=15)
@@ -158,16 +136,16 @@ class Application(tk.Frame):
         
         #ファイルの名前入力用
         label_filename=tk.Label(fm_main, text="ファイル名：", bg="#add8e6", font=("Arial", 10), height=2)
-        label_filename.grid(row=1, column=4, padx=2, pady=10, sticky=tk.W)
+        label_filename.grid(row=2, column=4, padx=2, pady=10, sticky=tk.W)
         # textvariableは一度selfで宣言しないといけないみたい...
         #StringVar：文字列を扱う, IntVar：整数を扱う, DoubleVar：浮遊小数点を扱う, BooleanVar：真偽値（True/False）を扱う
         self.filename_value = tk.StringVar()
         box_filename=tk.Entry(fm_main, bg="#e0ffff", font=("Arial", 13), width=13, textvariable=self.filename_value) #csvのファイル名を入力するところ
         box_filename.insert(tk.END, u'sample.csv')
-        box_filename.grid(row=1, column=5, padx=2, pady=10, sticky=tk.W) #何も入力していないとエラーになる
+        box_filename.grid(row=2, column=5, padx=2, pady=10, sticky=tk.W) #何も入力していないとエラーになる
         
         button_filename = tk.Button(fm_main, text="変更", **BUTTON_OPTIONS, font=("Arial", 10), width=6, command=self.change_filename)
-        button_filename.grid(row=1, column=6, padx=2, pady=10, sticky=tk.W)
+        button_filename.grid(row=2, column=6, padx=2, pady=10, sticky=tk.W)
         
         
         self.var = tk.IntVar()
@@ -175,39 +153,38 @@ class Application(tk.Frame):
         self.LRturn = tk.IntVar()
         self.LRturn.set(1)
         button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="回転させる", variable=self.var, value=1)
-        button_turn.grid(row=2, column=4)
-        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="回転させない", variable=self.var, value=0)
-        button_turn.grid(row=2, column=5, sticky=tk.W)
-        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="時計回り", variable=self.LRturn, value=1)
         button_turn.grid(row=3, column=4)
-        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="反時計回り", variable=self.LRturn, value=0)
+        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="回転させない", variable=self.var, value=0)
         button_turn.grid(row=3, column=5, sticky=tk.W)
+        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="時計回り", variable=self.LRturn, value=1)
+        button_turn.grid(row=4, column=4)
+        button_turn = tk.Radiobutton(fm_main, bg="#add8e6", text="反時計回り", variable=self.LRturn, value=0)
+        button_turn.grid(row=4, column=5, sticky=tk.W)
         
         #回転させる回数の入力用
         label_turn = tk.Label(fm_main, text="回転させる数 ：  ", bg="#add8e6", font=("Arial", 9), height=2)
-        label_turn.grid(row=4, column=4)
+        label_turn.grid(row=5, column=4)
         self.box_turn = tk.StringVar()
         box_turn = tk.Entry(fm_main, fg="#191970", bg="#e0ffff", font=("Arial", 13), width=4, textvariable=self.box_turn)
         box_turn.insert(tk.END, u'10')
-        box_turn.grid(row=4, column=5, sticky=tk.W)
+        box_turn.grid(row=5, column=5, sticky=tk.W)
         
         #label_space = tk.Label(fm_main, text="", width=5)
         #label_space.grid(row=9, colum=5, columnspan=2, padx=45, pady=10)
         
         #実行・停止
-        button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.dual_thread)
-        button_start.grid(row=6, column=4, columnspan=2, padx=20, pady=10, sticky=tk.SW)
+        self.button_start = tk.Button(fm_main, text="スタート", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.dual_thread) #def start()
+        self.button_start.grid(row=7, column=4, columnspan=2, padx=20, pady=10, sticky=tk.SW)
         
         button_stop = tk.Button(fm_main, text="一時停止", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.stop_tk)
-        button_stop.grid(row=6, column=5, columnspan=2, padx=40, pady=10, sticky=tk.SW)
-        
+        button_stop.grid(row=7, column=5, columnspan=2, padx=40, pady=10, sticky=tk.SW)
         
         self.check_value = tk.BooleanVar(value=False)
         chk = tk.Checkbutton(fm_main, bg="#add8e6", selectcolor="#ffe4e1", variable=self.check_value, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 10))
-        chk.grid(row=7, column=4, columnspan=2, padx=20, pady=10, sticky=tk.W)
+        chk.grid(row=8, column=4, columnspan=2, padx=20, pady=10, sticky=tk.W)
         
         button_stop = tk.Button(fm_main, text="終了", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.exit_tk)
-        button_stop.grid(row=8, column=5, columnspan=2, padx=45, pady=10, sticky=tk.W)
+        button_stop.grid(row=9, column=5, columnspan=2, padx=45, pady=10, sticky=tk.W)
         
         
                 
@@ -230,19 +207,22 @@ class Application(tk.Frame):
         print("ChangeFileName", res)
         
         
-    def turn(self):
-        GPIO.output(step, GPIO.HIGH)
-        sleep(0.001)
-        GPIO.output(step, GPIO.LOW)
         
-    
     
     #スタートボタンが押されたときの処理
     def start_tk(self):
-        messagebox.showinfo("title", "スタートが押されたら...", icon="info")
+        
+        #スタートボタンのテキストを「スタート」に変更
+        self.button_start.config(text="スタート")
+        
+        global is_stop
+        is_stop = True
+        
+        messagebox.showinfo("title", "スタートが押されたときの処理を記述していきます。", icon="info")
         fn = str(self.filename_value.get())
         print(fn)
         file_name = fn
+        messagebox.showerror("テスト", "csvファイルは" + str(file_name) + "に保存されています。")
         
         var_value = self.var.get()
         LR = self.LRturn.get()
@@ -250,92 +230,37 @@ class Application(tk.Frame):
         print("var_valueの値：" + str(var_value) + "\nLRの値：" + str(LR) + "\n回転数：" + str(intturn))
         
         
-        with open(os.path.join(dir_op_path,file_name),"w") as f:
-            csv_writer = csv.writer(f)
-            csv_writer.writerow(csv_label)
+        while True:
             
-            b_res = 0#
-            b_resA = 0#
+            if is_stop == False:
+                print("is_stop == False:")
+                #スタートボタンのテキストを「再開」に変更
+                self.button_start.config(text="再開")
+                break
+                
+            elif is_stop == True:
+                print("is_stop == True:")
+                time.sleep(1)
             
-            for Count in range(1, intturn + 1):
-                csv_value = []
-                
-                GPIO.output(direction, LR)
-                
-                if var_value == 1:
-                    self.turn()# check!!
-                    
-                check = subprocess.getoutput("i2cget -y 1 0x40 0x02 w") #checkに値を入れる
-                if check == "Error: Read failed": #たまにエラーが起きるのでエラーの文字を受け取ったとき
-                    res = b_res #前回の値を代入
-                else:
-                    res =(int(check[4:6],16)*256+int(check[2:4],16))*1.25/1000 #エラーはかずにちゃんと値が取れた時
-                Volt_ini = res #電圧の代入
-                Volt = round(Volt_ini, 3)
-                b_res = res #エラーの時の代入用
-                self.volt.set(str(Volt))
-                
-                check = subprocess.getoutput("i2cget -y 1 0x40 0x01 w")
-                if check == "Error: Read failed":
-                    resA = b_resA
-                elif int(check[4:6],16)<128:
-                    resA = (int(check[4:6],16)*256+int(check[2:4],16))
-                else:
-                    resA = (int(check[4:6],16)*256+int(check[2:4],16)-256*256)
-                Amp = resA#電流の代入
-                b_resA = resA
-                self.amp.set(str(Amp))
-                
-                if Count == 1 or Count % 15 == 0 or Count == intturn:
-                    sleep(0.1)
-                    bus.write_word_data(address_adt7420, configration_adt7420, 0x00)
-                    word_data = bus.read_word_data(address_adt7420, register_adt7420)
-                    rdata = (word_data & 0xff00) >> 8 | (word_data & 0xff) << 8
-                    sdata = rdata >> 3
-                    data=sdata/16
-                    Temp = round(data, 1) #check
-                    self.temp.set(str(Temp))
-                    #csv_value.append(Temp)
-                    
-                Watt_ini = Volt * Amp
-                Watt = round(Watt_ini, 3)
-                
-                self.watt.set(str(Watt)) #check
-                
-                self.count.set(str(Count))
-                
-                print(Count)
-                
-                #配列に各要素を入力
-                csv_value.append(Count)
-                csv_value.append(Volt)
-                csv_value.append(Amp)
-                csv_value.append(Watt)
-                csv_value.append(self.temp.get())
-                
-                csv_writer.writerow(csv_value)
-                
-                sleep(1)
-                
-            f.close()
-        
-            messagebox.showinfo("title", "success!!!!!!!!", icon="info") # check MOZC
-        
-        
+            else:
+                print("グローバル変数に関するエラーが発生")
             
-                
-                    
+            
     #start_tkを並列処理で実行する
     def dual_thread(self):
         thread = threading.Thread(target=self.start_tk)
         thread.start()      
         
-    
+        
+        
     #一時停止ボタンが押されたときの処理
     def stop_tk(self):
-        messagebox.showinfo("title", "一時停止のプログラムを実行します")
+        res = messagebox.showinfo("title", "一時停止のプログラムを実行します", icon="info")
+        print("stop", res)
         
-        # ---- ここから一時停止のプログラムを記載していく ----
+        global is_stop
+        is_stop = False
+        
         
         
     #終了ボタンが押されたときの処理
@@ -363,10 +288,13 @@ class Application(tk.Frame):
             print("EndYesNo", res)
             if res == "yes":
                 self.master.quit() #tkinterFrameの終了
-                cmd = "quit"
-                ps= subprocess.Popen("exec "+ cmd, shell = True)
-                ps.kill()
                 #main_window.destroy
+                
+                #cmd="quit"
+                #p = subprocess.Popen("exec " + cmd, shell=True)       
+                # execで実行
+                #p.kill()                                            
+                # コマンドを停止
             elif res == "no":
                 messagebox.showinfo("戻る", "アプリケーションを続けます。", icon="info")
                 
@@ -376,7 +304,7 @@ class Application(tk.Frame):
 main_window = tk.Tk()        
 myapp = Application(master=main_window)
 myapp.master.title("太陽光発電システムを用いた金融教材") # メインウィンドウの名前
-myapp.master.geometry("800x480") # ウィンドウの幅と高さピクセル単位で指定（width x height）
+myapp.master.geometry("760x580") # ウィンドウの幅と高さピクセル単位で指定（width x height）
 #myapp.master.geometry("1024x600")がラズパイ7インチモニターに多い解像度
 
 myapp.mainloop()
