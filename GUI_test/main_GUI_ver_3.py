@@ -23,16 +23,19 @@ import subprocess
 import json
 
 
-#グローバル変数（一時停止の実行フラグ）
-is_stop = True
 
+#グローバル変数の宣言
+is_stop = True # 一時停止の実行フラグ
+counter_list = [] # 時計回り、反時計回りにどれだけ回転したかを配列で記憶する
+is_restart_Count = 0 # 一時停止した際のカウント数を取得
 Count = 0
-is_restart_Count = 0
+
+
 
 #csvの保存先
 dir_op_path = '/home/pi/kakuda/csv'#''の中に保存先のディレクトリを指定
 
-#ピンのセットアップa
+#ピンのセットアップ
 direction = 20
 step = 21
 
@@ -45,6 +48,7 @@ BUTTON_OPTIONS = {
     "cursor": "man",
     "highlightbackground": "#483d8b",
 }
+
 
 
 # アプリケーション（GUI）クラス
@@ -213,20 +217,21 @@ class Application(tk.Frame):
 
     #スタートボタンが押されたときの処理
     def start_tk(self):
+                
+        global is_stop
+        is_stop = True
         
         #スタートボタンのテキストの値を取得（「再開」であればrestart_CountをCountに代入）
         button_text = self.button_start.cget("text")
         if button_text == "再開":
             #スタートボタンのテキストを「スタート」に変更
             self.button_start.config(text = "スタート")
-            global is_restart_Count
-            Count = is_restart_Count
-
-        
-        global is_stop
-        is_stop = True
-        
+            #global is_restart_Count
+            #Count = is_restart_Count
+            
+            
         messagebox.showinfo("title", "スタートが押されたときの処理を記述していきます。", icon="info")
+        
         fn = str(self.filename_value.get())
         print(fn)
         print("csvファイルの保存先：" + str(fn))
@@ -240,6 +245,8 @@ class Application(tk.Frame):
         
         for Count in range(1, intturn + 1):
             
+            global counter_list
+            
             if is_stop == False:
                 print("is_stop == False:")
                 #スタートボタンのテキストを「再開」に変更
@@ -248,7 +255,19 @@ class Application(tk.Frame):
                 break
                 
             elif is_stop == True:
-                print("is_stop == True:" + str(Count) + "count")
+                if LR == 1:
+                    LR_turn = "Right"
+                elif LR == 0:
+                    LR_turn = "Left"
+                #ターミナルにログを表示する（メモリ使用率が多くなる場合は無くしてもよい）    
+                if LR_turn == "Right":
+                    print("is_stop == True:" + str(Count) + "count:" + "Right")
+                    counter_list.append("Right")
+                elif LR_turn == "Left":
+                    print("is_stop == True:" + str(Count) + "count:" + "Left")
+                    counter_list.append("Left")
+                
+                
                 self.count.set(str(Count))
                 Count = Count + 1
                 time.sleep(1)
@@ -278,6 +297,7 @@ class Application(tk.Frame):
     #終了ボタンが押されたときの処理
     def exit_tk(self):
         
+        
         if self.check_value.get():
             #第三引数のオプションについて：
             #detail : 詳細メッセージ 
@@ -285,9 +305,35 @@ class Application(tk.Frame):
             res = messagebox.askquestion("title", "初期位置に戻るプログラムを実行しますか？", detail="※※ここに初期位置に戻るプログラムを書いていきます。\n　　まだ条件分岐は行われません。", icon="info")
             print("InitialPosition", res)
             if res == "yes":
-                messagebox.showinfo("title", "初期位置に戻るプログラムを実行します。", icon="info")
-                                
-                # ----ここから初期位置に戻るプログラムを記載していく----
+                
+                global counter_list
+                
+                print("LR : " + str(counter_list))
+                right_count = counter_list.count("Right")
+                print("right_count : " + str(right_count))
+                left_count = counter_list.count("Left")
+                print("left_count : " + str(left_count))
+                
+                if right_count > left_count:
+                    diff_count = right_count - left_count
+                    print("difference : " + str(diff_count) + " : " + "right_count")
+                    # ---- 反時計回りに戻すプログラムを記載していく ----
+                    
+                    
+                elif left_count:
+                    diff_count = left_count - right_count
+                    print("difference : " + str(diff_count) + " : " + "right_count")
+                    # ---- 時計回りに戻すプログラムを記載していく ----
+                    
+                    
+                else:
+                    diff_count = 0
+                    print("difference : " + str(diff_count) + " : " + "Same value")
+                    
+                    self.master.quit() #tkinterFrameの終了
+                    
+                    
+                    
                 
                 
                 
@@ -302,9 +348,7 @@ class Application(tk.Frame):
                 self.master.quit() #tkinterFrameの終了
                 #cmd="quit"
                 #p = subprocess.Popen("exec " + cmd, shell=True)       
-                # execで実行
                 #p.kill()                                            
-                # コマンドを停止
                 
             elif res == "no":
                 print("continue")
