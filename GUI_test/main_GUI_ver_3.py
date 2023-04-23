@@ -320,7 +320,7 @@ class Application(tk.Frame):
                     # ---- 反時計回りに戻すプログラムを記載していく ----
                     
                     
-                elif left_count:
+                elif left_count > right_count:
                     diff_count = left_count - right_count
                     print("difference : " + str(diff_count) + " : " + "right_count")
                     # ---- 時計回りに戻すプログラムを記載していく ----

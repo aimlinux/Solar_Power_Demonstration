@@ -85,7 +85,6 @@ class Application(tk.Frame):
     def create_widgets(self):
         
         
-        
         volt = tk.StringVar()
         amp = tk.StringVar()
         watt = tk.StringVar()
@@ -417,11 +416,15 @@ class Application(tk.Frame):
                     # ---- 反時計回りに戻すプログラムを記載していく ----
                     
                     
-                elif left_count:
+                    self.master.quit() #tkinterFrameの終了
+                    
+                elif left_count > right_count:
                     diff_count = left_count - right_count
                     print("difference : " + str(diff_count) + " : " + "left_count")
                     # ---- 反時計回りに戻すプログラムを記載していく ----
                     
+                    
+                    self.master.quit() #tkinterFrameの終了
                     
                 else:
                     diff_count = 0
