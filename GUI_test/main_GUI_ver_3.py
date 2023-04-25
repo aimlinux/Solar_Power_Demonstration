@@ -169,7 +169,7 @@ class Application(tk.Frame):
         button_turn.grid(row=4, column=5, sticky=tk.W)
         
         #回転させる回数の入力用
-        label_turn = tk.Label(fm_main, text="回転させる数 ：  ", bg="#add8e6", font=("Arial", 9), height=2)
+        label_turn = tk.Label(fm_main, text="回転させる数 :  ", bg="#add8e6", font=("Arial", 9), height=2)
         label_turn.grid(row=5, column=4)
         self.box_turn = tk.StringVar()
         box_turn = tk.Entry(fm_main, fg="#191970", bg="#e0ffff", font=("Arial", 13), width=4, textvariable=self.box_turn)

@@ -191,7 +191,7 @@ class Application(tk.Frame):
         button_turn.grid(row=3, column=5, sticky=tk.W)
         
         #回転させる回数の入力用
-        label_turn = tk.Label(fm_main, text="回転させる数 ：  ", bg="#add8e6", font=("Arial", 9), height=2)
+        label_turn = tk.Label(fm_main, text="回転させる数 :  ", bg="#add8e6", font=("Arial", 9), height=2)
         label_turn.grid(row=4, column=4)
         self.box_turn = tk.StringVar()
         box_turn = tk.Entry(fm_main, fg="#191970", bg="#e0ffff", font=("Arial", 13), width=4, textvariable=self.box_turn)
@@ -262,13 +262,13 @@ class Application(tk.Frame):
         messagebox.showinfo("title", "スタートが押されたら...", icon="info")
         
         fn = str(self.filename_value.get())
-        print("csvファイルの保存先：" + str(fn))
+        print("csvFileDirectory : " + str(fn))
         file_name = fn
         
         var_value = self.var.get()
         LR = self.LRturn.get()
         intturn=int(self.box_turn.get())
-        print("var_valueの値：" + str(var_value) + "\nLRの値：" + str(LR) + "\n回転数：" + str(intturn))
+        print("var_valueの値 : " + str(var_value) + "\nLRの値 : " + str(LR) + "\n回転数 : " + str(intturn))
         
         
         with open(os.path.join(dir_op_path,file_name),"w") as f:
@@ -288,7 +288,6 @@ class Application(tk.Frame):
                     print("is_stop == False:")
                     #スタートボタンのテキストを「再開」に変更
                     self.button_start.config(text = "再開")
-                    is_restart_Count = Count
                     break
                 
                 elif is_stop == True:
