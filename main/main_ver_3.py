@@ -410,8 +410,8 @@ class Application(tk.Frame):
                 print("right_count : " + str(right_count))
                 left_count = counter_list.count("Left")
                 print("left_count : " + str(left_count))
-             
-             
+            
+            
                 if right_count > left_count:
                     diff_count = right_count - left_count
                     print("difference : " + str(diff_count) + " : " + "right_count")
@@ -428,6 +428,8 @@ class Application(tk.Frame):
                     print("finish", res)                       
                     
                     self.master.quit() #tkinterFrameの終了
+                    
+                    
                     
                 elif left_count > right_count:
                     diff_count = left_count - right_count
