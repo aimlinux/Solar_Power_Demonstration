@@ -23,6 +23,8 @@ import subprocess
 import json
 
 
+    
+
 
 #グローバル変数の宣言
 is_stop = True # 一時停止の実行フラグ
@@ -421,10 +423,9 @@ class Application(tk.Frame):
                     for xi in range(1, return_count):
                         #messagebox.showinfo("title", "mozc....")
                         self.turn()
-                        print(xi)
+                        print("return_count : " + str(xi))
                         sleep(0.5)
                     
-                    res = messagebox.showinfo("finished", "Finished!!!")
                     print("finish", res)                       
                     
                     self.master.quit() #tkinterFrameの終了
@@ -440,7 +441,7 @@ class Application(tk.Frame):
                     for xi in range(1, return_count2):
                         #messagebox.showinfo("title", "mozc....")
                         self.turn()
-                        print(xi)
+                        print("return_count : " + str(xi))
                         sleep(0.5)
                     res = messagebox.showinfo("finished", "Finished!!!")
                     print("finish", res)
