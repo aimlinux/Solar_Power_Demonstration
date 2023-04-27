@@ -420,7 +420,7 @@ class Application(tk.Frame):
                 elif left_count > right_count:
                     diff_count = left_count - right_count
                     print("difference : " + str(diff_count) + " : " + "left_count")
-                    # ---- 反時計回りに戻すプログラムを記載していく ----
+                    # ---- 時計回りに戻すプログラムを記載していく ----
                     
                     
                     self.master.quit() #tkinterFrameの終了
