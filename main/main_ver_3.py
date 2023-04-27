@@ -310,6 +310,7 @@ class Application(tk.Frame):
                     
                     if var_value == 1:
                         self.turn()# check!!
+                        
                     check = subprocess.getoutput("i2cget -y 1 0x40 0x02 w") #checkに値を入れる
                     if check == "Error: Read failed": #たまにエラーが起きるのでエラーの文字を受け取ったとき
                         res = b_res #前回の値を代入
