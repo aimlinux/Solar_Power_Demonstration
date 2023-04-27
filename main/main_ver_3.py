@@ -22,9 +22,7 @@ import threading
 import subprocess
 import json
 
-
-    
-
+status_file = open("./setting/status.txt","w+")
 
 #グローバル変数の宣言
 is_stop = True # 一時停止の実行フラグ
@@ -211,7 +209,7 @@ class Application(tk.Frame):
         button_stop.grid(row=6, column=5, columnspan=2, padx=40, pady=10, sticky=tk.SW)
         
         
-        self.check_value = tk.BooleanVar(value=False)
+        self.check_value = tk.BooleanVar(value=True)
         chk = tk.Checkbutton(fm_main, bg="#add8e6", selectcolor="#ffe4e1", variable=self.check_value, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 10))
         chk.grid(row=7, column=4, columnspan=2, padx=20, pady=10, sticky=tk.W)
         
@@ -412,8 +410,8 @@ class Application(tk.Frame):
                 print("right_count : " + str(right_count))
                 left_count = counter_list.count("Left")
                 print("left_count : " + str(left_count))
-            
-            
+             
+             
                 if right_count > left_count:
                     diff_count = right_count - left_count
                     print("difference : " + str(diff_count) + " : " + "right_count")
@@ -423,14 +421,13 @@ class Application(tk.Frame):
                     for xi in range(1, return_count):
                         #messagebox.showinfo("title", "mozc....")
                         self.turn()
-                        print("return_count : " + str(xi))
+                        print(xi)
                         sleep(0.5)
                     
+                    res = messagebox.showinfo("finished", "Finished!!!")
                     print("finish", res)                       
                     
                     self.master.quit() #tkinterFrameの終了
-                    
-                    
                     
                 elif left_count > right_count:
                     diff_count = left_count - right_count
@@ -441,7 +438,7 @@ class Application(tk.Frame):
                     for xi in range(1, return_count2):
                         #messagebox.showinfo("title", "mozc....")
                         self.turn()
-                        print("return_count : " + str(xi))
+                        print(xi)
                         sleep(0.5)
                     res = messagebox.showinfo("finished", "Finished!!!")
                     print("finish", res)
@@ -465,6 +462,15 @@ class Application(tk.Frame):
             res = messagebox.askquestion("title", "アプリケーションを終了しますか？", icon="warning")
             print("EndYesNo", res)
             if res == "yes":
+                
+                
+                for xs in counter_list:
+                    xs_str = str(xs)
+                    status_file.write(xs_str)
+                    status_file.write("\n")
+                
+                status_file.close()
+                
                 self.master.quit() #tkinterFrameの終了
                 #cmd = "quit"
                 #ps= subprocess.Popen("exec "+ cmd, shell = True)
