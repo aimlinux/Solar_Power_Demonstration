@@ -9,6 +9,8 @@ import datetime
 import subprocess
 
 from matplotlib.pyplot import box
+from matplotlib.figure import Figure #tkinter上でグラフを描画するため
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk #tkinter上でグラフを描画するため
 import os
 from os.path import expanduser
 import csv
@@ -398,7 +400,9 @@ class Application(tk.Frame):
         thread.start()      
         
         
-
+        
+        
+        
     #グラフ１のウィンドウが表示される
     def create_graph_1(self):
         
@@ -410,21 +414,42 @@ class Application(tk.Frame):
         return_opened_1 = True
         
         #グラフ１ウィンドウ作成
-        pw_graph_1 = tk.PanedWindow(self.master, bg="#add8e6", orient='vertical')
+        pw_graph_1 = tk.PanedWindow(self.master, bg="#ffffff", orient='vertical')
         pw_graph_1.pack(expand=True, fill = tk.BOTH, side="left")
         
         #グラフ１フレーム作成
-        fm_graph_1 = tk.Frame(bd=10, bg="#add8e6", relief="ridge")
+        fm_graph_1 = tk.Frame(bd=10, bg="#ffffff", relief="ridge")
         pw_graph_1.add(fm_graph_1)
-                    
-                    
+        
+        
+        # フレームの幅と高さを取得
+        width = self.winfo_width()
+        height = self.winfo_height()
+        
+        
+        # matplotlibの描画領域の作成
+        self.fig = Figure(figsize=(width*0.8, height*0.8))
+        #座標軸の作成
+        self.ax = self.fig.add_subplot(1, 1, 1)
+        # 描画領域とFrameの関連ずけ
+        self.fig_canvas = FigureCanvasTkAgg(self.fig, fm_graph_1)
+        # matplotlibのツールバーを作成
+        self.toolbar = NavigationToolbar2Tk(self.fig_canvas, fm_graph_1)
+        # matplotlibのグラフをフレームに配置
+        self.fig_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        
+        
+        #表示するデータの作成        
+        #グラフを描画
+        x = [1, 2, 3, 4, 5]
+        y = [2, 4, 1, 5, 3]
+        self.ax.plot(x, y)
+    
+        
     # -------- グラフを表示するフレームのオブジェクト作成 --------
-        label_head = tk.Label(fm_graph_1, text="   ~~電流と時間の関係のグラフ~~", bg="#add8e6", font=("Arial", 15), height=2)
-        label_head.grid(row=1, column=0, columnspan=3)
+        button_back_fm = tk.Button(fm_graph_1, text="戻る", **BUTTON_OPTIONS, font=("Arial", 12), width=12,  command=self.back_fm)
+        button_back_fm.pack(side = tk.RIGHT, padx=80, pady=5)
         
-        
-        button_back_fm = tk.Button(fm_graph_1, text="戻る", **BUTTON_OPTIONS, font=("Arial", 12), width=8, command=self.back_fm)
-        button_back_fm.grid(row=5, column=5, columnspan=1, padx=20, pady=20)
         
         print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
     
@@ -442,23 +467,45 @@ class Application(tk.Frame):
         return_opened_2 = True
         
         #グラフ２ウィンドウ作成
-        pw_graph_2 = tk.PanedWindow(self.master, bg="#add8e6", orient='vertical')
+        pw_graph_2 = tk.PanedWindow(self.master, bg="#ffffff", orient='vertical')
         pw_graph_2.pack(expand=True, fill = tk.BOTH, side="left")
         
         #グラフ２フレーム作成
-        fm_graph_2 = tk.Frame(bd=10, bg="#add8e6", relief="ridge")
+        fm_graph_2 = tk.Frame(bd=10, bg="#ffffff", relief="ridge")
         pw_graph_2.add(fm_graph_2)
         
         
+        # フレームの幅と高さを取得
+        width = self.winfo_width()
+        height = self.winfo_height()
+        
+        
+        # matplotlibの描画領域の作成
+        self.fig = Figure(figsize=(width*0.8, height*0.8))
+        #座標軸の作成
+        self.ax = self.fig.add_subplot(1, 1, 1)
+        # 描画領域とFrameの関連ずけ
+        self.fig_canvas = FigureCanvasTkAgg(self.fig, fm_graph_2)
+        # matplotlibのツールバーを作成
+        self.toolbar = NavigationToolbar2Tk(self.fig_canvas, fm_graph_2)
+        # matplotlibのグラフをフレームに配置
+        self.fig_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        
+        
+        #表示するデータの作成        
+        #グラフを描画
+        x = [1, 2, 3, 4, 5]
+        y = [2, 4, 1, 5, 3]
+        self.ax.plot(x, y)
+        
+        
     # -------- グラフを表示するフレームのオブジェクト作成 --------
-        label_head = tk.Label(fm_graph_2, text="   ~~電圧と電流の関係のグラフ~~", bg="#add8e6", font=("Arial", 15), height=2)
-        label_head.grid(row=1, column=0, columnspan=3)
         
-        
-        button_back_fm = tk.Button(fm_graph_2, text="戻る", **BUTTON_OPTIONS, font=("Arial", 12), width=8, command=self.back_fm)
-        button_back_fm.grid(row=5, column=5, columnspan=1, padx=20, pady=20)
+        button_back_fm = tk.Button(fm_graph_2, text="戻る", **BUTTON_OPTIONS, font=("Arial", 12), width=12,  command=self.back_fm)
+        button_back_fm.pack(side = tk.RIGHT, padx=80, pady=5)
         
         print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
+        
         
         
         
@@ -478,7 +525,7 @@ class Application(tk.Frame):
             pw_graph_2.destroy()
             return_opened_2 = False
             self.create_widgets()
-        
+            
         
         
         
@@ -505,7 +552,6 @@ class Application(tk.Frame):
             if res == "yes":
                 sleep(2)
                 
-                
                 global counter_list
                 
                 print("LR : " + str(counter_list))
@@ -513,6 +559,7 @@ class Application(tk.Frame):
                 print("right_count : " + str(right_count))
                 left_count = counter_list.count("Left")
                 print("left_count : " + str(left_count))
+            
             
             
                 if right_count > left_count:
@@ -531,6 +578,7 @@ class Application(tk.Frame):
                     print("finish", res)                       
                     
                     self.master.quit() #tkinterFrameの終了
+                    
                     
                 elif left_count > right_count:
                     diff_count = left_count - right_count
