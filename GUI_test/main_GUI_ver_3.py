@@ -9,6 +9,8 @@ import datetime
 import subprocess
 
 from matplotlib.pyplot import box
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 import os
 from os.path import expanduser
 import csv
@@ -323,6 +325,17 @@ class Application(tk.Frame):
         #グラフ１フレーム作成
         fm_graph_1 = tk.Frame(bd=10, bg="#add8e6", relief="ridge")
         pw_graph_1.add(fm_graph_1)
+        
+        # matplotlibの描画領域の作成
+        fig = Figure()
+        #座標軸の作成
+        self.ax = fig.add_subplot(1, 1, 1)
+        # 描画領域とFrameの関連ずけ
+        self.fig_canvas = FigureCanvasTkAgg(fig, fm_graph_1)
+        # matplotlibのツールバーを作成
+        self.toolbar = NavigationToolbar2Tk(self.fig_canvas, fm_graph_1)
+        # matplotlibのグラフをフレームに配置
+        self.fig_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
                     
     # -------- グラフを表示するフレームのオブジェクト作成 --------
         
