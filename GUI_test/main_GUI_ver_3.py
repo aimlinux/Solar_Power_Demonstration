@@ -64,6 +64,7 @@ class Application(tk.Frame):
         
     def create_widgets(self):
         
+        global fm_main # グローバル変数宣言しないと他のdef内で仕えない
         
         
         volt = tk.StringVar()
@@ -291,6 +292,15 @@ class Application(tk.Frame):
     def dual_thread(self):
         thread = threading.Thread(target=self.start_tk)
         thread.start()      
+        
+        
+    
+    #グラフが表示されるFrameを作成
+    def create_graph_1():
+        
+        global fm_graph_1
+        
+        fm_main.destroy()
         
         
         
