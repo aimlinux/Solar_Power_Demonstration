@@ -184,7 +184,7 @@ class Application(tk.Frame):
         box_filename.insert(tk.END, u'sample.csv')
         box_filename.grid(row=1, column=5, padx=2, pady=10, sticky=tk.W) #何も入力していないとエラーになる
         
-        button_filename = tk.Button(fm_main, text="変更", **BUTTON_OPTIONS, font=("Arial", 10), width=6, command=self.change_filename)
+        button_filename = tk.Button(fm_main, text="確認", **BUTTON_OPTIONS, font=("Arial", 10), width=6, command=self.change_filename)
         button_filename.grid(row=1, column=6, padx=2, pady=10, sticky=tk.W)
         
         
@@ -288,7 +288,7 @@ class Application(tk.Frame):
         var_value = self.var.get()
         LR = self.LRturn.get()
         intturn=int(self.box_turn.get())
-        print("var_valueの値 : " + str(var_value) + "\nLRの値 : " + str(LR) + "\n回転数 : " + str(intturn))
+        print("var_value : " + str(var_value) + "\nLR : " + str(LR) + "\ncount : " + str(intturn))
         
         
         with open(os.path.join(dir_op_path,file_name),"w") as f:
@@ -384,7 +384,7 @@ class Application(tk.Frame):
                     sleep(1)
                     
                 else:
-                    print("グローバル変数に関するエラーが発生")
+                    print("Errors related to global variables")
                     break
                 
             f.close()

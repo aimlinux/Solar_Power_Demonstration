@@ -162,7 +162,7 @@ class Application(tk.Frame):
         box_filename.insert(tk.END, u'sample.csv')
         box_filename.grid(row=2, column=5, padx=2, pady=10, sticky=tk.W) #何も入力していないとエラーになる
         
-        button_filename = tk.Button(fm_main, text="変更", **BUTTON_OPTIONS, font=("Arial", 10), width=6, command=self.change_filename)
+        button_filename = tk.Button(fm_main, text="確認", **BUTTON_OPTIONS, font=("Arial", 10), width=6, command=self.change_filename)
         button_filename.grid(row=2, column=6, padx=2, pady=10, sticky=tk.W)
         
         
@@ -256,14 +256,13 @@ class Application(tk.Frame):
         messagebox.showinfo("title", "スタートが押されたときの処理を記述していきます。", icon="info")
         
         fn = str(self.filename_value.get())
-        print(fn)
-        print("csvファイルの保存先：" + str(fn))
+        print("csvFileDirectory : " + str(fn))
         file_name = fn
         
         var_value = self.var.get()
         LR = self.LRturn.get()
         intturn=int(self.box_turn.get())
-        print("var_valueの値：" + str(var_value) + "\nLRの値：" + str(LR) + "\n回転数：" + str(intturn))
+        print("var_value : " + str(var_value) + "\nLR : " + str(LR) + "\ncount : " + str(intturn))
         
         
         for Count in range(1, intturn + 1):
@@ -296,7 +295,7 @@ class Application(tk.Frame):
                 time.sleep(1)
             
             else:
-                print("グローバル変数に関するエラーが発生")
+                print("Errors related to global variables")
                 break
             
             
