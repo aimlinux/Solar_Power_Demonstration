@@ -89,8 +89,8 @@ class Application(tk.Frame):
         #各ラベル作成
         # padx, pady ：外側の横、縦の隙間
         # row, column : 行、列
-        label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=10)
-        label_space.grid(row=0, column=0, padx=40, pady=10)
+        #label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=10)
+        #label_space.grid(row=0, column=0, padx=40, pady=10)
         
         label_head = tk.Label(fm_main, text="   ~~計測された各値~~", bg="#add8e6", font=("Arial", 15), height=2)
         label_head.grid(row=1, column=0, columnspan=3)
@@ -107,19 +107,19 @@ class Application(tk.Frame):
         label_volt.grid(row=2, column=0, padx=40, pady=10)
         label_V = tk.Label(fm_main, text="V", bg="#add8e6", font=("Arial", 10))
         label_V.grid(row=2, column=2, padx=10, pady=10)
-        label_amp = tk.Label(fm_main, text="〇電流値(mA)", bg="#add8e6", font=("Arial", 10), height=2, width=10)
+        label_amp = tk.Label(fm_main, text="〇電流値(mA)", bg="#add8e6", font=("Arial", 10), height=1, width=10)
         label_amp.grid(row=3, column=0, padx=40, pady=10)
         label_A = tk.Label(fm_main, text="mA", bg="#add8e6", font=("Arial", 10))
         label_A.grid(row=3, column=2, padx=10, pady=10)
-        label_watt = tk.Label(fm_main, text="〇電力(mW)", bg="#add8e6", font=("Arial", 10), height=2, width=10)
+        label_watt = tk.Label(fm_main, text="〇電力(mW)", bg="#add8e6", font=("Arial", 10), height=1, width=10)
         label_watt.grid(row=4, column=0, padx=40, pady=10)
         label_W = tk.Label(fm_main, text="mW", bg="#add8e6", font=("Arial", 10))
         label_W.grid(row=4, column=2, padx=10, pady=10)
-        label_temp = tk.Label(fm_main, text="〇温度(℃)", bg="#add8e6", font=("Arial", 10), height=2, width=10)
+        label_temp = tk.Label(fm_main, text="〇温度(℃)", bg="#add8e6", font=("Arial", 10), height=1, width=10)
         label_temp.grid(row=5, column=0, padx=40, pady=10)
         label_T = tk.Label(fm_main, text="℃", bg="#add8e6", font=("Arial", 10))
         label_T.grid(row=5, column=2, padx=10, pady=10)
-        label_count = tk.Label(fm_main, text="〇カウント", bg="#add8e6", font=("Arial", 10), height=2, width=10)
+        label_count = tk.Label(fm_main, text="〇カウント", bg="#add8e6", font=("Arial", 10), height=1, width=10)
         label_count.grid(row=6, column=0, padx=10, pady=10)
 
         #各値の出力用
@@ -127,24 +127,24 @@ class Application(tk.Frame):
         box_volt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.volt)
         box_volt.grid(row=2, column=1)
         self.amp = tk.StringVar()
-        box_amp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.amp)
+        box_amp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.amp)
         box_amp.grid(row=3, column=1)
         self.watt = tk.StringVar()
-        box_watt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.watt)
+        box_watt = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.watt)
         box_watt.grid(row=4, column=1)
         self.temp = tk.StringVar()
-        box_temp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.temp)
+        box_temp = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.temp)
         box_temp.grid(row=5, column=1)
         self.count = tk.StringVar()
-        box_count = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=2, width=3, textvariable=self.count)
+        box_count = tk.Label(fm_main, bg="#f0ffff", font=("Arial", 10), height=1, width=5, textvariable=self.count)
         box_count.grid(row=6, column=1)
 
-        label_space = tk.Label(fm_main, text="", bg="#add8e6", height=2, width=15)
+        label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=15)
         label_space.grid(row=2, column=3, padx=10, pady=10)
         
         
         #ファイルの名前入力用
-        label_filename=tk.Label(fm_main, text="ファイル名：", bg="#add8e6", font=("Arial", 10), height=2)
+        label_filename=tk.Label(fm_main, text="ファイル名：", bg="#add8e6", font=("Arial", 10), height=1)
         label_filename.grid(row=2, column=4, padx=2, pady=10, sticky=tk.W)
         # textvariableは一度selfで宣言しないといけないみたい...
         #StringVar：文字列を扱う, IntVar：整数を扱う, DoubleVar：浮遊小数点を扱う, BooleanVar：真偽値（True/False）を扱う
@@ -171,7 +171,7 @@ class Application(tk.Frame):
         button_turn.grid(row=4, column=5, sticky=tk.W)
         
         #回転させる回数の入力用
-        label_turn = tk.Label(fm_main, text="回転させる数 :  ", bg="#add8e6", font=("Arial", 9), height=2)
+        label_turn = tk.Label(fm_main, text="回転させる数 :  ", bg="#add8e6", font=("Arial", 9), height=1)
         label_turn.grid(row=5, column=4)
         self.box_turn = tk.StringVar()
         box_turn = tk.Entry(fm_main, fg="#191970", bg="#e0ffff", font=("Arial", 13), width=4, textvariable=self.box_turn)
@@ -188,12 +188,20 @@ class Application(tk.Frame):
         button_stop = tk.Button(fm_main, text="一時停止", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.stop_tk)
         button_stop.grid(row=7, column=5, columnspan=2, padx=40, pady=10, sticky=tk.SW)
         
-        self.check_value = tk.BooleanVar(value=False)
+        self.check_value = tk.BooleanVar(value=True)
         chk = tk.Checkbutton(fm_main, bg="#add8e6", selectcolor="#ffe4e1", variable=self.check_value, onvalue=True, offvalue=False, text="終了したとき初期位置に戻す", font=("Arial", 10))
         chk.grid(row=8, column=4, columnspan=2, padx=20, pady=10, sticky=tk.W)
         
         button_stop = tk.Button(fm_main, text="終了", **BUTTON_OPTIONS, font=("Arial", 12), width=10, command=self.exit_tk)
         button_stop.grid(row=9, column=5, columnspan=2, padx=45, pady=10, sticky=tk.W)
+        
+        
+        #グラフを表示するボタン
+        button_graph_1 = tk.Button(fm_main, text="IT Graph", **BUTTON_OPTIONS, font=("Arial", 12), width=8)
+        button_graph_1.grid(row=7, column=0, columnspan=2, padx=20, pady=20, sticky=tk.E)
+        
+        button_graph_2 = tk.Button(fm_main, text="IV Graph", **BUTTON_OPTIONS, font=("Arial", 12), width=8)
+        button_graph_2.grid(row=7, column=2, columnspan=2, padx=20, pady=20, sticky=tk.W)
         
         
                 
@@ -321,11 +329,15 @@ class Application(tk.Frame):
                     print("difference : " + str(diff_count) + " : " + "right_count")
                     # ---- 反時計回りに戻すプログラムを記載していく ----
                     
+                    self.master.quit() #tkinterFrameの終了
+                    
                     
                 elif left_count > right_count:
                     diff_count = left_count - right_count
                     print("difference : " + str(diff_count) + " : " + "right_count")
                     # ---- 時計回りに戻すプログラムを記載していく ----
+                    
+                    self.master.quit() #tkinterFrameの終了
                     
                     
                 else:
@@ -365,7 +377,7 @@ class Application(tk.Frame):
 main_window = tk.Tk()        
 myapp = Application(master=main_window)
 myapp.master.title("太陽光発電システムを用いた金融教材") # メインウィンドウの名前
-myapp.master.geometry("760x580") # ウィンドウの幅と高さピクセル単位で指定（width x height）
+myapp.master.geometry("800x480") # ウィンドウの幅と高さピクセル単位で指定（width x height）
 #myapp.master.geometry("1024x600")がラズパイ7インチモニターに多い解像度
 
 myapp.mainloop()

@@ -217,6 +217,15 @@ class Application(tk.Frame):
         button_stop.grid(row=8, column=5, columnspan=2, padx=45, pady=10, sticky=tk.W)
         
         
+        
+        #グラフを表示するボタン
+        button_graph_1 = tk.Button(fm_main, text="IT Graph", **BUTTON_OPTIONS, font=("Arial", 12), width=8)
+        button_graph_1.grid(row=7, column=0, columnspan=2, padx=20, pady=20, sticky=tk.E)
+        
+        button_graph_2 = tk.Button(fm_main, text="IV Graph", **BUTTON_OPTIONS, font=("Arial", 12), width=8)
+        button_graph_2.grid(row=7, column=2, columnspan=2, padx=20, pady=20, sticky=tk.W)
+        
+        
                 
         print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
         
