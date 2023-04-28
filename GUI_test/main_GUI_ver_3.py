@@ -32,7 +32,8 @@ counter_list = [] # 時計回り、反時計回りにどれだけ回転したか
 is_restart_Count = 0 # 一時停止した際のカウント数を取得
 Count = 0
 
-
+return_opened_1 = False
+return_opened_2 = False
 
 #csvの保存先
 dir_op_path = '/home/pi/kakuda/csv'#''の中に保存先のディレクトリを指定
@@ -64,7 +65,11 @@ class Application(tk.Frame):
         
     def create_widgets(self):
         
-        global fm_main # グローバル変数宣言しないと他のdef内で仕えない
+        global fm_main # グローバル変数宣言しないとFrameを閉じれなくなる
+        global pw_main
+        global fm_graph_1
+        global fm_graph_2
+        
         
         
         volt = tk.StringVar()
@@ -87,7 +92,8 @@ class Application(tk.Frame):
         
         
         
-        #各ラベル作成
+    # -------- メインフレームのオブジェクト作成 --------
+    
         # padx, pady ：外側の横、縦の隙間
         # row, column : 行、列
         #label_space = tk.Label(fm_main, text="", bg="#add8e6", height=1, width=10)
@@ -198,11 +204,15 @@ class Application(tk.Frame):
         
         
         #グラフを表示するボタン
-        button_graph_1 = tk.Button(fm_main, text="IT Graph", **BUTTON_OPTIONS, font=("Arial", 12), width=8)
+        button_graph_1 = tk.Button(fm_main, text="IT Graph", **BUTTON_OPTIONS, font=("Arial", 12), width=8, command=self.create_graph_1)
         button_graph_1.grid(row=7, column=0, columnspan=2, padx=20, pady=20, sticky=tk.E)
         
-        button_graph_2 = tk.Button(fm_main, text="IV Graph", **BUTTON_OPTIONS, font=("Arial", 12), width=8)
+        button_graph_2 = tk.Button(fm_main, text="IV Graph", **BUTTON_OPTIONS, font=("Arial", 12), width=8, command=self.create_graph_2)
         button_graph_2.grid(row=7, column=2, columnspan=2, padx=20, pady=20, sticky=tk.W)
+        
+        
+        
+        
         
         
                 
@@ -295,12 +305,86 @@ class Application(tk.Frame):
         
         
     
-    #グラフが表示されるFrameを作成
-    def create_graph_1():
+    
+    #グラフ１のウィンドウが表示される
+    def create_graph_1(self):
         
         global fm_graph_1
+        global pw_graph_1
+        pw_main.destroy()
         
-        fm_main.destroy()
+        global return_opened_1
+        return_opened_1 = True
+        
+        #グラフ１ウィンドウ作成
+        pw_graph_1 = tk.PanedWindow(self.master, bg="#add8e6", orient='vertical')
+        pw_graph_1.pack(expand=True, fill = tk.BOTH, side="left")
+        
+        #グラフ１フレーム作成
+        fm_graph_1 = tk.Frame(bd=10, bg="#add8e6", relief="ridge")
+        pw_graph_1.add(fm_graph_1)
+                    
+    # -------- グラフを表示するフレームのオブジェクト作成 --------
+        
+        label_head = tk.Label(fm_graph_1, text="   ~~電流と時間の関係のグラフ~~", bg="#add8e6", font=("Arial", 15), height=2)
+        label_head.grid(row=1, column=0, columnspan=3)
+        
+        
+        button_back_fm = tk.Button(fm_graph_1, text="戻る", **BUTTON_OPTIONS, font=("Arial", 12), width=8, command=self.back_fm)
+        button_back_fm.grid(row=5, column=5, columnspan=1, padx=20, pady=20)
+        
+        print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
+    
+    
+    
+    
+    #グラフ２のウィンドウが表示される
+    def create_graph_2(self):
+        
+        global fm_graph_2
+        global pw_graph_2
+        pw_main.destroy()
+        
+        global return_opened_2
+        return_opened_2 = True
+        
+        #グラフ２ウィンドウ作成
+        pw_graph_2 = tk.PanedWindow(self.master, bg="#add8e6", orient='vertical')
+        pw_graph_2.pack(expand=True, fill = tk.BOTH, side="left")
+        
+        #グラフ２フレーム作成
+        fm_graph_2 = tk.Frame(bd=10, bg="#add8e6", relief="ridge")
+        pw_graph_2.add(fm_graph_2)
+        
+    # -------- グラフを表示するフレームのオブジェクト作成 --------
+        
+        label_head = tk.Label(fm_graph_2, text="   ~~電圧と電流の関係のグラフ~~", bg="#add8e6", font=("Arial", 15), height=2)
+        label_head.grid(row=1, column=0, columnspan=3)
+        
+        
+        button_back_fm = tk.Button(fm_graph_2, text="戻る", **BUTTON_OPTIONS, font=("Arial", 12), width=8, command=self.back_fm)
+        button_back_fm.grid(row=5, column=5, columnspan=1, padx=20, pady=20)
+        
+        print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
+        
+        
+        
+    #グラフのウィンドウからメインウィンドウに戻る
+    def back_fm(self):
+        
+        global return_opened_1
+        global return_opened_2
+        
+        if return_opened_1 == True:
+            pw_graph_1.destroy()
+            return_opened_1 = False
+            self.create_widgets()
+            
+        elif return_opened_2 == True:
+            pw_graph_2.destroy()
+            return_opened_2 = False
+            self.create_widgets()
+            
         
         
         
