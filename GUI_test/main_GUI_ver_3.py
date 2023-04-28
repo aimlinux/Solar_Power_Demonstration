@@ -23,6 +23,8 @@ import subprocess
 import json
 
 
+#status_file = open('../main/setting/status.txt')
+
 
 #グローバル変数の宣言
 is_stop = True # 一時停止の実行フラグ
@@ -345,6 +347,10 @@ class Application(tk.Frame):
             res = messagebox.askquestion("title", "アプリケーションを終了しますか？", icon="warning")
             print("EndYesNo", res)
             if res == "yes":
+                
+                #status_file.write("一回目だよ")
+                #status_file.close()
+                
                 self.master.quit() #tkinterFrameの終了
                 #cmd="quit"
                 #p = subprocess.Popen("exec " + cmd, shell=True)       
