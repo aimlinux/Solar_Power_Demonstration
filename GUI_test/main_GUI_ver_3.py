@@ -247,7 +247,7 @@ class Application(tk.Frame):
         #スタートボタンのテキストの値を取得（「再開」であればrestart_CountをCountに代入）
         button_text = self.button_start.cget("text")
         if button_text == "再開":
-            #スタートボタンのテキストを「スタート」に変更
+            #スタートボタンのテキストを「スタート」に変更 
             self.button_start.config(text = "スタート")
             #global is_restart_Count
             #Count = is_restart_Count
