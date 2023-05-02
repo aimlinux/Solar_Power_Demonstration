@@ -524,8 +524,8 @@ class Application(tk.Frame):
         
     #一時停止ボタンが押されたときの処理
     def stop_tk(self):
-        res = messagebox.showinfo("title", "一時停止のプログラムを実行します", icon="info")
-        print("stop", res)
+        #res = messagebox.showinfo("title", "一時停止のプログラムを実行します", icon="info")
+        #print("stop", res)
         
         global is_stop
         is_stop = False
@@ -576,9 +576,6 @@ class Application(tk.Frame):
                     
                     
                     
-                
-                
-                
             elif res == "no":
                 print("continue")
                 
