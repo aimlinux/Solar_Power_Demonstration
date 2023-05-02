@@ -689,6 +689,7 @@ class Application(tk.Frame):
                 status_file.close()
                 
                 self.master.quit() #tkinterFrameの終了
+                # ----強制終了----
                 #cmd = "quit"
                 #ps= subprocess.Popen("exec "+ cmd, shell = True)
                 #ps.kill()
