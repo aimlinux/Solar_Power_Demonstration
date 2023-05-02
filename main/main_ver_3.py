@@ -631,7 +631,7 @@ class Application(tk.Frame):
                 if right_count > left_count:
                     diff_count = right_count - left_count
                     print("difference : " + str(diff_count) + " : " + "right_count")
-                    # ---- 反時計回りに戻すプログラムを記載していく ----
+                    # ---- 反時計回りに戻すプログラム ----
                     GPIO.output(direction, 0)
                     return_count:int = int(diff_count)
                     for xi in range(1, return_count):
@@ -649,7 +649,7 @@ class Application(tk.Frame):
                 elif left_count > right_count:
                     diff_count = left_count - right_count
                     print("difference : " + str(diff_count) + " : " + "left_count")
-                    # ---- 時計回りに戻すプログラムを記載していく ----
+                    # ---- 時計回りに戻すプログラム ----
                     GPIO.output(direction, 1)
                     return_count2:int = int(diff_count)
                     for xi in range(1, return_count2):
