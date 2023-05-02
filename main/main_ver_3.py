@@ -8,8 +8,9 @@ import numpy as np
 import datetime
 import subprocess
 
+import matplotlib.pyplot as plt #tkinter上でグラフを描画するため
 from matplotlib.pyplot import box
-from matplotlib.figure import Figure #tkinter上でグラフを描画するため
+from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk #tkinter上でグラフを描画するため
 import os
 from os.path import expanduser
@@ -24,6 +25,7 @@ import threading
 import subprocess
 import json
 
+
 status_file = open("./setting/status.txt","w+")
 
 #グローバル変数の宣言
@@ -31,6 +33,14 @@ is_stop = True # 一時停止の実行フラグ
 counter_list = [] # 時計回り、反時計回りにどれだけ回転したかを配列で記憶する
 is_restart_Count = 0 # 一時停止した際のカウント数を取得
 Count = 0
+
+#グラフ作成のための配列
+amp_list = []
+volt_list = []
+watt_list = []
+temp_list = []
+count_list = []
+for_count = 0 # for文の回数をカウント
 
 return_opened_1 = False
 return_opened_2 = False
@@ -99,7 +109,7 @@ class Application(tk.Frame):
         volt = tk.StringVar()
         amp = tk.StringVar()
         watt = tk.StringVar()
-        watth = tk.StringVar()
+        watt = tk.StringVar() #check
         temp = tk.StringVar()
         ohm = tk.StringVar()
         count = tk.StringVar()
@@ -282,7 +292,7 @@ class Application(tk.Frame):
         messagebox.showinfo("title", "スタートが押されたら...", icon="info")
         
         fn = str(self.filename_value.get())
-        print("csvFileDirectory : " + str(fn))
+        print("csvFileDirectory : " + str(dir_op_path) + "/" + str(fn)) #check
         file_name = fn
         
         var_value = self.var.get()
@@ -302,6 +312,12 @@ class Application(tk.Frame):
             for Count in range(1, intturn + 1):
                 
                 global counter_list
+                
+                global amp_list
+                global volt_list
+                global watt_list
+                global temp_list
+                global count_list
                 
                 #グローバル変数is_stop（一時停止のフラグ）がFalseだったらCountとintturnの値を保存してfor文を抜ける
                 if is_stop == False:
@@ -381,6 +397,14 @@ class Application(tk.Frame):
                     
                     csv_writer.writerow(csv_value)
                     
+                    #グラフ作成のために各値を配列に代入
+                    amp_list.append(int(Amp))
+                    volt_list.append(int(Volt))
+                    watt_list.append(int(Watt))
+                    temp_list.append(int(Temp))
+                    for_count = for_count + 1
+                    count_list.append(for_count)
+                    
                     sleep(1)
                     
                 else:
@@ -402,8 +426,7 @@ class Application(tk.Frame):
         
         
         
-        
-    #グラフ１のウィンドウが表示される
+    #グラフ１（電力と時間）のウィンドウが表示される
     def create_graph_1(self):
         
         global fm_graph_1
@@ -439,12 +462,14 @@ class Application(tk.Frame):
         self.fig_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
         
         
-        #表示するデータの作成        
+        #表示するデータの作成    
+        global watt_list
+        global count_list
         #グラフを描画
-        x = [1, 2, 3, 4, 5]
-        y = [2, 4, 1, 5, 3]
+        x = count_list
+        y = watt_list
         self.ax.plot(x, y)
-    
+
         
     # -------- グラフを表示するフレームのオブジェクト作成 --------
         button_back_fm = tk.Button(fm_graph_1, text="戻る", **BUTTON_OPTIONS, font=("Arial", 12), width=12,  command=self.back_fm)
@@ -456,7 +481,7 @@ class Application(tk.Frame):
     
     
     
-    #グラフ２のウィンドウが表示される
+    #グラフ２（電流と電圧）のウィンドウが表示される
     def create_graph_2(self):
         
         global fm_graph_2
@@ -492,17 +517,19 @@ class Application(tk.Frame):
         self.fig_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
         
         
-        #表示するデータの作成        
+        #表示するデータの作成
+        global amp_list
+        global volt_list        
         #グラフを描画
-        x = [1, 2, 3, 4, 5]
-        y = [2, 4, 1, 5, 3]
+        x = amp_list
+        y = volt_list
         self.ax.plot(x, y)
         
         
     # -------- グラフを表示するフレームのオブジェクト作成 --------
-        
         button_back_fm = tk.Button(fm_graph_2, text="戻る", **BUTTON_OPTIONS, font=("Arial", 12), width=12,  command=self.back_fm)
         button_back_fm.pack(side = tk.RIGHT, padx=80, pady=5)
+        
         
         print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
         

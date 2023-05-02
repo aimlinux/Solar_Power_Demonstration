@@ -8,8 +8,9 @@ import numpy as np
 import datetime
 import subprocess
 
+import matplotlib.pyplot as plt #tkinter上でグラフを描画するため
 from matplotlib.pyplot import box
-from matplotlib.figure import Figure #tkinter上でグラフを描画するため
+from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk #tkinter上でグラフを描画するため
 import os
 from os.path import expanduser
@@ -23,6 +24,7 @@ import time
 import threading
 import subprocess
 import json
+import random as rand
 
 
 #status_file = open('../main/setting/status.txt')
@@ -34,8 +36,17 @@ counter_list = [] # 時計回り、反時計回りにどれだけ回転したか
 is_restart_Count = 0 # 一時停止した際のカウント数を取得
 Count = 0
 
+#グラフ作成のための配列
+amp_list = []
+volt_list = []
+watt_list = []
+temp_list = []
+count_list = []
+for_count = 0 # for文の回数をカウント
+
 return_opened_1 = False
 return_opened_2 = False
+
 
 #csvの保存先
 dir_op_path = '/home/pi/kakuda/csv'#''の中に保存先のディレクトリを指定
@@ -77,7 +88,7 @@ class Application(tk.Frame):
         volt = tk.StringVar()
         amp = tk.StringVar()
         watt = tk.StringVar()
-        watth = tk.StringVar()
+        watt = tk.StringVar() # check
         temp = tk.StringVar()
         ohm = tk.StringVar()
         count = tk.StringVar()
@@ -256,7 +267,7 @@ class Application(tk.Frame):
         messagebox.showinfo("title", "スタートが押されたときの処理を記述していきます。", icon="info")
         
         fn = str(self.filename_value.get())
-        print("csvFileDirectory : " + str(fn))
+        print("csvFileDirectory : " + str(dir_op_path) + "/" + str(fn))
         file_name = fn
         
         var_value = self.var.get()
@@ -264,10 +275,21 @@ class Application(tk.Frame):
         intturn=int(self.box_turn.get())
         print("var_value : " + str(var_value) + "\nLR : " + str(LR) + "\ncount : " + str(intturn))
         
+        Amp = 0
+        Volt = 0
+        Watt = 0
+        Temp = 20
         
         for Count in range(1, intturn + 1):
             
             global counter_list
+            
+            global amp_list
+            global volt_list
+            global watt_list
+            global temp_list
+            global count_list
+            global for_count
             
             if is_stop == False:
                 print("is_stop == False:")
@@ -291,12 +313,35 @@ class Application(tk.Frame):
                 
                 
                 self.count.set(str(Count))
+                self.amp.set(str(Amp))
+                self.volt.set(str(Volt))
+                self.watt.set(str(Watt))
+                self.temp.set(str(Temp))
+                
+                #グラフ作成のために値を配列に代入
+                amp_list.append(int(Amp))
+                volt_list.append(int(Volt))
+                watt_list.append(int(Watt))
+                temp_list.append(int(Temp))
+                for_count = for_count + 1
+                count_list.append(for_count)
+                
+                len_count = len(count_list) - 1
+                #print(amp_list[len_count] + " : " + volt_list[len_count] + " : " + watt_list[len_count] + " : " + temp_list[len_count] + " : " + count_list[len_count])
+                
+                #デモグラフのためにランダムに値を入れてる
                 Count = Count + 1
+                Amp = rand.randrange(10)
+                Volt = rand.randrange(10)
+                Watt = int(Amp) * int(Volt)
+                
                 time.sleep(1)
             
             else:
                 print("Errors related to global variables")
                 break
+            
+            
             
             
     #start_tkを並列処理で実行する
@@ -307,7 +352,8 @@ class Application(tk.Frame):
         
     
     
-    #グラフ１のウィンドウが表示される
+    
+    #グラフ１（電力と時間）のウィンドウが表示される
     def create_graph_1(self):
         
         global fm_graph_1
@@ -341,12 +387,33 @@ class Application(tk.Frame):
         self.toolbar = NavigationToolbar2Tk(self.fig_canvas, fm_graph_1)
         # matplotlibのグラフをフレームに配置
         self.fig_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+                
+        #タイトル・ラベル
+        self.ax.set_title("電力と時間の関係のグラフ", fontname="MS Mincho", fontweight="bold", fontsize=14, color="#000080")
+        self.ax.set_xlabel("時間", fontname="MS Mincho", fontweight="bold", fontsize=10, color="#000080")
+        self.ax.set_ylabel("電力", fontname="MS Mincho", fontweight="bold", fontsize=10, color="#000080")
         
+        #表示するデータの作成
+        global watt_list
+        global count_list
+        x = count_list
+        y = watt_list
         
-        #表示するデータの作成        
+        #軸の最大値・最小値
+        global for_count
+        if for_count == 0:
+            self.ax.set_xlim(0, 10)
+            self.ax.set_ylim(0, 10)
+        else:
+            len_count = len(count_list) - 1
+            max_watt = max(watt_list)
+            max_watt_plus = max_watt * 1.2
+            self.ax.set_xlim(0, count_list[len_count])
+            self.ax.set_ylim(0, max_watt_plus)
+        
+        self.ax.grid(color="#c0c0c0", alpha=0.6, linestyle="--")
+        
         #グラフを描画
-        x = [1, 2, 3, 4, 5]
-        y = [2, 4, 1, 5, 3]
         self.ax.plot(x, y)
     
         
@@ -360,7 +427,7 @@ class Application(tk.Frame):
     
     
     
-    #グラフ２のウィンドウが表示される
+    #グラフ２（電流と電圧）のウィンドウが表示される
     def create_graph_2(self):
         
         global fm_graph_2
@@ -394,19 +461,41 @@ class Application(tk.Frame):
         self.toolbar = NavigationToolbar2Tk(self.fig_canvas, fm_graph_2)
         # matplotlibのグラフをフレームに配置
         self.fig_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+                
+        #タイトル・ラベル
+        self.ax.set_title("電流と電圧の関係のグラフ", fontname="MS Mincho", fontweight="bold", fontsize=14, color="#000080")
+        self.ax.set_xlabel("電流", fontname="MS Mincho", fontweight="bold", fontsize=10, color="#000080")
+        self.ax.set_ylabel("電圧", fontname="MS Mincho", fontweight="bold", fontsize=10, color="#000080")
         
+        #表示するデータの作成
+        global amp_list
+        global volt_list
+        global count_list
+        x = amp_list
+        y = volt_list
         
-        #表示するデータの作成        
+        #軸の最大値・最小値
+        global for_count
+        if for_count == 0:
+            self.ax.set_xlim(0, 10)
+            self.ax.set_ylim(0, 10)
+        else:
+            len_count = len(count_list) - 1
+            max_watt = max(watt_list)
+            max_watt_plus = max_watt * 1.5
+            self.ax.set_xlim(0, count_list[len_count])
+            self.ax.set_ylim(0, max_watt_plus)
+        
+        self.ax.grid(color="#c0c0c0", alpha=0.6, linestyle="--")
+        
         #グラフを描画
-        x = [1, 2, 3, 4, 5]
-        y = [2, 4, 1, 5, 3]
         self.ax.plot(x, y)
         
         
     # -------- グラフを表示するフレームのオブジェクト作成 --------
-        
         button_back_fm = tk.Button(fm_graph_2, text="戻る", **BUTTON_OPTIONS, font=("Arial", 12), width=12,  command=self.back_fm)
         button_back_fm.pack(side = tk.RIGHT, padx=80, pady=5)
+        
         
         print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
         
