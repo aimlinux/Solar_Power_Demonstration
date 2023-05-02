@@ -5,6 +5,7 @@ from tkinter import filedialog
 from tkinter import messagebox 
 import re
 import numpy as np
+import random as rand
 import datetime
 import subprocess
 
@@ -24,7 +25,6 @@ import time
 import threading
 import subprocess
 import json
-import random as rand
 
 
 #status_file = open('../main/setting/status.txt')
@@ -480,16 +480,17 @@ class Application(tk.Frame):
             self.ax.set_xlim(0, 10)
             self.ax.set_ylim(0, 10)
         else:
-            len_count = len(count_list) - 1
-            max_watt = max(watt_list)
-            max_watt_plus = max_watt * 1.5
-            self.ax.set_xlim(0, count_list[len_count])
-            self.ax.set_ylim(0, max_watt_plus)
+            max_amp = max(amp_list)
+            max_amp_plus = max_amp * 1.2
+            max_volt = max(volt_list)
+            max_volt_plus = max_volt * 1.5
+            self.ax.set_xlim(0, max_amp_plus)
+            self.ax.set_ylim(0, max_volt_plus)
         
-        self.ax.grid(color="#c0c0c0", alpha=0.6, linestyle="--")
+        self.ax.grid(color="#c0c0c0", alpha=0.8, linestyle="--")
         
         #グラフを描画
-        self.ax.plot(x, y)
+        self.ax.scatter(x, y, s = 200, color="pink", alpha=0.6, edgecolors="red")
         
         
     # -------- グラフを表示するフレームのオブジェクト作成 --------

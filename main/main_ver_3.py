@@ -5,6 +5,7 @@ from tkinter import filedialog
 from tkinter import messagebox 
 import re
 import numpy as np
+import random
 import datetime
 import subprocess
 
@@ -247,9 +248,7 @@ class Application(tk.Frame):
         
         
         
-                
         print('DEBUG:----{}----'.format(sys._getframe().f_code.co_name)) if self.DEBUG_LOG else ""
-        
         
         
         
@@ -460,16 +459,35 @@ class Application(tk.Frame):
         self.toolbar = NavigationToolbar2Tk(self.fig_canvas, fm_graph_1)
         # matplotlibのグラフをフレームに配置
         self.fig_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+                
+        #タイトル・ラベル
+        self.ax.set_title("電力と時間の関係のグラフ", fontname="MS Mincho", fontweight="bold", fontsize=14, color="#000080")
+        self.ax.set_xlabel("時間", fontname="MS Mincho", fontweight="bold", fontsize=10, color="#000080")
+        self.ax.set_ylabel("電力", fontname="MS Mincho", fontweight="bold", fontsize=10, color="#000080")
         
-        
-        #表示するデータの作成    
+        #表示するデータの作成
         global watt_list
         global count_list
-        #グラフを描画
         x = count_list
         y = watt_list
+        
+        #軸の最大値・最小値
+        global for_count
+        if for_count == 0:
+            self.ax.set_xlim(0, 10)
+            self.ax.set_ylim(0, 10)
+        else:
+            len_count = len(count_list) - 1
+            max_watt = max(watt_list)
+            max_watt_plus = max_watt * 1.2
+            self.ax.set_xlim(0, count_list[len_count])
+            self.ax.set_ylim(0, max_watt_plus)
+        
+        self.ax.grid(color="#c0c0c0", alpha=0.6, linestyle="--")
+        
+        #グラフを描画
         self.ax.plot(x, y)
-
+    
         
     # -------- グラフを表示するフレームのオブジェクト作成 --------
         button_back_fm = tk.Button(fm_graph_1, text="戻る", **BUTTON_OPTIONS, font=("Arial", 12), width=12,  command=self.back_fm)
@@ -515,15 +533,36 @@ class Application(tk.Frame):
         self.toolbar = NavigationToolbar2Tk(self.fig_canvas, fm_graph_2)
         # matplotlibのグラフをフレームに配置
         self.fig_canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
-        
+                
+        #タイトル・ラベル
+        self.ax.set_title("電流と電圧の関係のグラフ", fontname="MS Mincho", fontweight="bold", fontsize=14, color="#000080")
+        self.ax.set_xlabel("電流", fontname="MS Mincho", fontweight="bold", fontsize=10, color="#000080")
+        self.ax.set_ylabel("電圧", fontname="MS Mincho", fontweight="bold", fontsize=10, color="#000080")
         
         #表示するデータの作成
         global amp_list
-        global volt_list        
-        #グラフを描画
+        global volt_list
+        global count_list
         x = amp_list
         y = volt_list
-        self.ax.plot(x, y)
+        
+        #軸の最大値・最小値
+        global for_count
+        if for_count == 0:
+            self.ax.set_xlim(0, 10)
+            self.ax.set_ylim(0, 10)
+        else:
+            max_amp = max(amp_list)
+            max_amp_plus = max_amp * 1.2
+            max_volt = max(volt_list)
+            max_volt_plus = max_volt * 1.5
+            self.ax.set_xlim(0, max_amp_plus)
+            self.ax.set_ylim(0, max_volt_plus)
+        
+        self.ax.grid(color="#c0c0c0", alpha=0.8, linestyle="--")
+        
+        #グラフを描画
+        self.ax.scatter(x, y, s = 200, color="pink", alpha=0.6, edgecolors="red")
         
         
     # -------- グラフを表示するフレームのオブジェクト作成 --------
